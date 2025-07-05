@@ -1,0 +1,151 @@
+Create a visually rich, modern, 3D-enabled marketing website for an AI-powered learning and enterprise assistant platform.
+
+🎯 Objective
+Design a marketing website (not dashboard or app UI) that communicates and sells a multi-functional AI platform covering:
+
+🎓 Self-paced Courses
+
+🗣️ Voice-based Language Learning for Kids
+
+🧑‍🏫 AI Tutors for Schools/Institutions
+
+🧪 Adaptive Test Engine with Gray Area Detection
+
+🏭 Voice + Chat AI Agents for Enterprise and Industry
+
+The website should use interactive 3D designs to make it immersive and memorable.
+
+🧩 Website Structure Overview
+✅ Pages to Include:
+Homepage
+
+Use Case Pages (5 total)
+
+How It Works
+
+About
+
+Contact / Book a Demo
+
+(Optional) Blog or Resources
+
+🎨 Visual and UX Design Instructions
+Overall Aesthetic
+Futuristic, clean, and bold
+
+Smooth scroll with parallax effects
+
+Neon-pastel accents or deep-tech gradients (blue-violet, teal, etc.)
+
+Rounded corners, shadows, glassmorphism cards
+
+🧱 Homepage Design (with 3D)
+Hero Section:
+
+3D scene (e.g., rotating brain with glowing nodes or AI teacher avatar)
+
+Tagline: "AI-Powered Learning. Voice Agents. Intelligent Tutors."
+
+Buttons: Explore Platform, Book a Demo
+
+Feature Cards (Horizontal Scroll or Grid):
+
+Each use case represented by a 3D icon or animation
+
+Smooth hover effects and animated transitions
+
+3D Interaction Ideas:
+
+Floating 3D cubes showing each product feature
+
+Voicewave animation synced to TTS sample
+
+Clickable 3D world or dashboard mockup
+
+🧩 Use Case Pages (One per use case with unique 3D element)
+Each use case page should have:
+
+🧠 Courses Page:
+3D open book or course dashboard mockup
+
+Embedded video or animation of a student-agent interaction
+
+Call to Action: Start Learning with an AI Tutor
+
+🗣️ Language Learning for Kids:
+3D animated character (e.g., a panda or robot teaching a child)
+
+Speech bubble animations or talk animations with mic icon
+
+CTA: Try a Voice Demo
+
+🧑‍🏫 AI Tutors for Institutions:
+3D school campus model with AI "nodes" inside classrooms
+
+Animation: Upload → Agent Generation Pipeline
+
+CTA: Create a Custom AI Tutor
+
+🧪 Adaptive Test Engine:
+3D animated radar map of student skill areas (strong/weak zones)
+
+Auto-generated follow-up question flow
+
+CTA: Start a Diagnostic Test
+
+🏭 AI for Industry:
+3D call center cube with voice waves traveling to different agent avatars
+
+Scenarios: AI selling, onboarding new employees, internal knowledge bot
+
+CTA: Talk to Our Team for Custom Solutions
+
+⚙️ “How It Works” Page (Visual & Tech Architecture)
+Interactive 3D diagram of the system:
+
+📦 Content Upload → 🔄 RAG System → 🧠 AI Agent → 🗣️ Voice/Chat Output
+
+Clickable pipeline steps
+
+Optional Lottie animations to show dynamic processing
+
+💡 About Page
+3D rotating globe with impact markers (global reach)
+
+Team cards with hover-tilt effects or 3D flip
+
+📞 Contact Page
+Floating chatbot bubble assistant
+
+Booking calendar with 3D hover effect
+
+Voice input option (microphone animation)
+
+🖼️ Tools & Tech to Use
+Function	Recommended Tools
+Frontend	Next.js / React + Tailwind CSS
+3D Framework	Three.js or Spline for scenes
+Animations	Framer Motion, LottieFiles
+Voice Demos	Web Audio API + ElevenLabs or Azure TTS
+Design & Mockup	Figma + Spline integration or Framer
+
+🧠 AI and Web Features
+AI tutor voice sample with playback
+
+Live demo of asking a question to an AI tutor
+
+Interactive “build your agent” CTA (leads to a lead form)
+
+CRM and analytics integration for demo tracking
+
+📦 Deliverables Expected (optional, for developer/designer use)
+Homepage.spline or embedded 3D iframe components
+
+Figma file with homepage + use case templates
+
+Next.js + Tailwind boilerplate with placeholder animations
+
+Spline or Three.js scripts for 3D elements
+
+Icons, typography, and color system
+
