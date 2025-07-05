@@ -194,11 +194,11 @@ const VoiceBridgeAnimation: React.FC<VoiceBridgeAnimationProps> = ({
           <Text
             ref={textRef}
             position={[0, 0, 0]}
-            fontSize={1.2}
+            fontSize={2}
             color={words[currentWordIndex]?.color || "#667eea"}
             anchorX="center"
             anchorY="middle"
-            font="/fonts/Poppins-Bold.woff"
+            fontWeight="bold"
           >
             {words[currentWordIndex]?.text || "Hello"}
           </Text>
@@ -210,12 +210,12 @@ const VoiceBridgeAnimation: React.FC<VoiceBridgeAnimationProps> = ({
         <group>
           <Float speed={0.5} rotationIntensity={0.05} floatIntensity={0.2}>
             <Text
-              position={[0, 0.5, 0]}
-              fontSize={0.8}
+              position={[0, 1, 0]}
+              fontSize={1.2}
               color="#667eea"
               anchorX="center"
               anchorY="middle"
-              font="/fonts/Poppins-Bold.woff"
+              fontWeight="bold"
             >
               Speak. Learn. Grow.
             </Text>
@@ -223,12 +223,11 @@ const VoiceBridgeAnimation: React.FC<VoiceBridgeAnimationProps> = ({
           
           <Float speed={0.3} rotationIntensity={0.03} floatIntensity={0.1}>
             <Text
-              position={[0, -0.3, 0]}
-              fontSize={0.4}
+              position={[0, 0, 0]}
+              fontSize={0.6}
               color="#764ba2"
               anchorX="center"
               anchorY="middle"
-              font="/fonts/Poppins-Regular.woff"
             >
               Voice-Based Language Learning Powered by AI
             </Text>

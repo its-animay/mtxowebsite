@@ -88,3 +88,6 @@ Preferred communication style: Simple, everyday language.
 
 Changelog:
 - July 05, 2025. Initial setup
+- July 05, 2025. Complete redesign of Language Learning page with voice-first experience
+- July 05, 2025. Added immersive 3D VoiceBridgeAnimation with multilingual word morphing
+- July 05, 2025. Integrated floating chat bubbles, voice wave rings, and particle effects
