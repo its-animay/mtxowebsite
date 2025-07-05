@@ -15,6 +15,7 @@ const VoiceBridgeAnimation: React.FC<VoiceBridgeAnimationProps> = ({
   const [currentWordIndex, setCurrentWordIndex] = useState(0);
   const [showTagline, setShowTagline] = useState(false);
   const [animationPhase, setAnimationPhase] = useState<'opening' | 'morphing' | 'climax'>('opening');
+  const [textOpacity, setTextOpacity] = useState(1);
   
   const groupRef = useRef<THREE.Group>(null);
   const textRef = useRef<THREE.Mesh>(null);
@@ -34,40 +35,41 @@ const VoiceBridgeAnimation: React.FC<VoiceBridgeAnimationProps> = ({
   useEffect(() => {
     if (!isActive) return;
 
-    const timeline = [
-      // Opening phase (0-2s)
-      { time: 0, phase: 'opening' },
-      // Morphing phase (2-6s)
-      { time: 2000, phase: 'morphing' },
-      // Climax phase (6-10s)
-      { time: 6000, phase: 'climax' }
-    ];
+    // Phase 1: Opening (0-2s) - Show first word
+    setTimeout(() => {
+      setAnimationPhase('morphing');
+    }, 2000);
 
-    timeline.forEach(({ time, phase }) => {
-      setTimeout(() => {
-        setAnimationPhase(phase as any);
-        if (phase === 'climax') {
-          setShowTagline(true);
-          onComplete?.();
-        }
-      }, time);
-    });
-
-    // Word morphing during the morphing phase
-    if (animationPhase === 'morphing') {
+    // Phase 2: Morphing (2-8s) - Cycle through languages
+    setTimeout(() => {
+      let wordIndex = 0;
       const wordInterval = setInterval(() => {
-        setCurrentWordIndex(prev => {
-          if (prev < words.length - 1) {
-            return prev + 1;
+        // Fade out
+        setTextOpacity(0);
+        
+        setTimeout(() => {
+          wordIndex++;
+          if (wordIndex >= words.length) {
+            clearInterval(wordInterval);
+            // Phase 3: Climax (8-10s) - Show tagline
+            setTimeout(() => {
+              setAnimationPhase('climax');
+              setShowTagline(true);
+              onComplete?.();
+            }, 500);
+            return;
           }
-          clearInterval(wordInterval);
-          return prev;
-        });
-      }, 600); // Gradually increase speed
+          
+          setCurrentWordIndex(wordIndex);
+          // Fade in
+          setTextOpacity(1);
+        }, 200); // 200ms fade transition
+        
+      }, 800); // 800ms per word (including fade time)
 
       return () => clearInterval(wordInterval);
-    }
-  }, [isActive, animationPhase, onComplete]);
+    }, 2000);
+  }, [isActive, onComplete]);
 
   // Voice wave rings animation
   const VoiceWaveRings = () => {
@@ -200,6 +202,7 @@ const VoiceBridgeAnimation: React.FC<VoiceBridgeAnimationProps> = ({
             anchorY="middle"
             fontWeight="bold"
             maxWidth={4}
+            fillOpacity={textOpacity}
           >
             {words[currentWordIndex]?.text || "Hello"}
           </Text>
