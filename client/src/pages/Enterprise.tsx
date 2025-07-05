@@ -329,7 +329,10 @@ export default function Enterprise() {
           style={{ y }}
         >
           {/* Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-900/50 via-purple-900/30 to-slate-900/50" />
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900/80 via-blue-900/70 to-purple-900/80" />
+          
+          {/* Text Background for better readability */}
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-900/50 to-transparent" />
           
           {/* Floating Particles */}
           {[...Array(20)].map((_, i) => (
@@ -354,23 +357,26 @@ export default function Enterprise() {
         </motion.div>
 
         {/* Background 3D Scene */}
-        <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 z-0 opacity-60">
           <Canvas camera={{ position: [0, 0, 10], fov: 50 }}>
             <ambientLight intensity={0.4} />
             <directionalLight position={[10, 10, 5]} intensity={1.5} />
             <pointLight position={[-10, -10, -5]} intensity={0.8} color="#00d4ff" />
-            <EnterpriseAIScene intensity={1} />
+            <EnterpriseAIScene intensity={0.8} />
             <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.3} />
             <Environment preset="city" />
           </Canvas>
         </div>
 
         {/* Hero Content */}
-        <div className="relative z-10 text-center max-w-6xl mx-auto px-6 py-12">
+        <div className="relative z-20 text-center max-w-6xl mx-auto px-6 py-12">
+          {/* Content Background */}
+          <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm rounded-3xl border border-white/10 -mx-4 -my-4" />
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2 }}
+            className="relative z-30"
           >
             <motion.h1 
               className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight"
@@ -483,6 +489,89 @@ export default function Enterprise() {
               </div>
             </motion.div>
           </motion.div>
+        </div>
+      </section>
+
+      {/* Industry Cards Section */}
+      <section className="py-16 px-6 bg-slate-900/50 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Industry-Specific AI Solutions
+            </h2>
+            <p className="text-lg text-blue-100 max-w-3xl mx-auto">
+              Each industry gets tailored AI agents that understand specific needs and deliver measurable results.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              {
+                title: "Fintech",
+                description: "Credit card limits, EMI plans, fraud reporting, and auto-KYC voice onboarding",
+                icon: "💳",
+                color: "from-green-400 to-blue-500"
+              },
+              {
+                title: "EdTech", 
+                description: "Voice tutors for MCQs, concept explanations, and conversational doubt resolution",
+                icon: "🎓",
+                color: "from-purple-400 to-pink-500"
+              },
+              {
+                title: "Healthcare",
+                description: "HIPAA-compliant appointment booking, symptom diagnosis, and lab report queries",
+                icon: "🏥",
+                color: "from-red-400 to-orange-500"
+              },
+              {
+                title: "Real Estate",
+                description: "Property walkthroughs, investment options, and voice-powered buyer interest capture",
+                icon: "🏡",
+                color: "from-yellow-400 to-green-500"
+              },
+              {
+                title: "E-commerce",
+                description: "Voice order tracking, AI concierge for VIP shoppers, and intelligent recommendations",
+                icon: "🛒",
+                color: "from-cyan-400 to-blue-500"
+              },
+              {
+                title: "Enterprise",
+                description: "CRM integration, voice-powered support, and business process automation",
+                icon: "🏢",
+                color: "from-indigo-400 to-purple-500"
+              }
+            ].map((industry, index) => (
+              <motion.div
+                key={industry.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="group relative"
+              >
+                <div className="relative p-6 bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-white/10 hover:border-white/20 transition-all duration-300">
+                  <div className={`absolute inset-0 bg-gradient-to-br ${industry.color} opacity-0 group-hover:opacity-10 rounded-2xl transition-opacity duration-300`} />
+                  
+                  <div className="relative z-10">
+                    <div className="text-4xl mb-4">{industry.icon}</div>
+                    <h3 className="text-xl font-bold text-white mb-3">{industry.title}</h3>
+                    <p className="text-blue-100 text-sm leading-relaxed">{industry.description}</p>
+                  </div>
+                  
+                  <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" />
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 

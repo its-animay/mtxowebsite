@@ -94,3 +94,5 @@ Changelog:
 - July 05, 2025. Created comprehensive "AI for School" page with 3D AI orb, step-by-step workflow, personalization features, and interactive demos
 - July 05, 2025. Fixed all UI issues on AI Tutors page including header visibility, geometry optimization, and symmetrical card layouts
 - July 05, 2025. Created stunning Enterprise section with futuristic 3D holographic AI assistant, voice-based customer support and sales automation features
+- July 05, 2025. Fixed overlapping content issues on Enterprise page - improved text readability with better background overlays and z-index layering
+- July 05, 2025. Added dedicated industry cards section displaying 6 specific industries (Fintech, EdTech, Healthcare, Real Estate, E-commerce, Enterprise) with detailed use cases and hover animations
