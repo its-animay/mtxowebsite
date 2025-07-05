@@ -1,0 +1,50 @@
+Design and code an immersive, fully responsive 3D Hero Section for a next-gen enterprise platform that provides intelligent Voice AI Agents for Customer Support and Sales Automation. The hero should instantly convey futuristic sophistication, enterprise-grade reliability, and a deep tech vibe that’s also welcoming and human-centered.
+
+🧠 Platform Theme:
+AI Agents that talk, think, and close — for enterprise teams that want automation without losing the personal touch.
+
+🎨 Visual and Aesthetic Guidelines:
+3D Central Focus: A hero-grade 3D scene using Three.js or Spline that shows:
+
+A stylized holographic AI assistant avatar (minimalist humanoid or abstract orb) speaking with real customers.
+
+Interacting 3D UI panels floating around it — like chat windows, CRM data charts, waveform animations.
+
+Animated voice wave particles syncing with the assistant's speech.
+
+Soft glassy surfaces, reflections, light beams, and a translucent gradient atmosphere.
+
+If using Spline, import model URL and embed as interactive iframe.
+
+Layout Composition:
+
+Left Half: Textual call-to-value content.
+
+Headline: Transforming Enterprise Communication with Voice AI Agents
+
+Subheadline: AI agents trained for enterprise sales and support — they speak, solve, and sell in real-time.
+
+CTAs: ▶️ Try the Live Demo and 📞 Book a Discovery Call (animated hover states)
+
+Right Half: 3D animated scene (responsive scaling and mobile fallback to Lottie or static image).
+
+Typography:
+
+Use a premium, futuristic font pairing (e.g., Space Grotesk for headings, Inter or Satoshi for body).
+
+Texts should use gradients or subtle blurs for a holographic look (blend with background).
+
+Color Scheme:
+
+Dark mode default: deep indigo/navy #0B0F28, accent with electric blue, emerald, violet glows.
+
+Glowy UI panels with glassmorphism: semi-transparent with blur, light reflections, and drop shadows.
+
+Microinteractions:
+
+Use Framer Motion for element entry (slide-in with spring, fade-in of CTA).
+
+Add hover parallax or cursor-follow effect to the 3D model or background lights.
+
+Floating particles and soft ambient motion in background using Canvas/WebGL shaders.
+

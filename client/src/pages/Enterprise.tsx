@@ -35,125 +35,209 @@ import {
 } from 'lucide-react';
 import GlassCard from '../components/ui/GlassCard';
 
-// 3D Holographic AI Assistant Component
-const HolographicAssistant = ({ intensity = 1 }: { intensity?: number }) => {
-  const meshRef = useRef<THREE.Mesh>(null);
-  const ringRef = useRef<THREE.Group>(null);
+// Industry Use Case Panel Component
+const IndustryPanel = ({ 
+  position, 
+  rotation = [0, 0, 0], 
+  industry, 
+  color = "#00d4ff" 
+}: { 
+  position: [number, number, number]; 
+  rotation?: [number, number, number];
+  industry: string;
+  color?: string;
+}) => {
+  const panelRef = useRef<THREE.Mesh>(null);
   
   useFrame((state) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.y = state.clock.elapsedTime * 0.3;
-    }
-    if (ringRef.current) {
-      ringRef.current.rotation.z = state.clock.elapsedTime * 0.2;
+    if (panelRef.current) {
+      panelRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.5) * 0.1;
     }
   });
 
   return (
-    <Float speed={2} rotationIntensity={0.4} floatIntensity={0.8}>
-      <group>
-        {/* Main AI Core */}
-        <Sphere ref={meshRef} args={[1.5, 64, 64]} position={[0, 0, 0]}>
-          <MeshDistortMaterial 
-            color="#00d4ff" 
-            transparent 
-            opacity={0.6}
-            distort={0.3}
-            speed={2}
-            roughness={0.1}
-            metalness={0.9}
-          />
-        </Sphere>
-        
-        {/* Inner Energy Core */}
-        <Sphere args={[1, 32, 32]} position={[0, 0, 0]}>
+    <Float speed={1.5} rotationIntensity={0.3} floatIntensity={0.5}>
+      <group position={position} rotation={rotation}>
+        {/* Panel Background */}
+        <Box ref={panelRef} args={[2, 1.2, 0.1]}>
           <meshStandardMaterial 
-            color="#4f46e5" 
+            color={color} 
             transparent 
-            opacity={0.4}
-            emissive="#4f46e5"
-            emissiveIntensity={intensity * 0.6}
+            opacity={0.8}
+            emissive={color}
+            emissiveIntensity={0.2}
+            roughness={0.1}
+            metalness={0.8}
           />
-        </Sphere>
+        </Box>
         
-        {/* Rotating Rings */}
-        <group ref={ringRef}>
-          <Torus args={[2.5, 0.1, 16, 32]} position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
-            <meshStandardMaterial 
-              color="#00ff88" 
-              transparent 
-              opacity={0.7}
-              emissive="#00ff88"
-              emissiveIntensity={0.3}
-            />
-          </Torus>
-          <Torus args={[3, 0.08, 16, 32]} position={[0, 0, 0]} rotation={[0, Math.PI / 3, 0]}>
-            <meshStandardMaterial 
-              color="#ff6b6b" 
-              transparent 
-              opacity={0.5}
-              emissive="#ff6b6b"
-              emissiveIntensity={0.2}
-            />
-          </Torus>
-        </group>
+        {/* Panel Glow */}
+        <Box args={[2.2, 1.4, 0.05]} position={[0, 0, -0.1]}>
+          <meshStandardMaterial 
+            color={color} 
+            transparent 
+            opacity={0.3}
+            emissive={color}
+            emissiveIntensity={0.4}
+          />
+        </Box>
         
-        {/* Voice Wave Visualizers */}
-        {[...Array(8)].map((_, i) => (
-          <Float key={i} speed={1.5 + i * 0.2} rotationIntensity={0.1}>
-            <Box 
-              args={[0.2, 0.8 + Math.sin(i) * 0.5, 0.2]} 
-              position={[
-                Math.sin(i * Math.PI / 4) * 4,
-                Math.cos(i * Math.PI / 4) * 0.5,
-                Math.sin(i * Math.PI / 6) * 2
-              ]}
-            >
-              <meshStandardMaterial 
-                color="#a78bfa" 
-                transparent 
-                opacity={0.8}
-                emissive="#a78bfa"
-                emissiveIntensity={0.3}
-              />
-            </Box>
-          </Float>
-        ))}
-        
-        {/* Data Particles */}
-        {[...Array(12)].map((_, i) => (
-          <Float key={`particle-${i}`} speed={0.8 + i * 0.1} rotationIntensity={0.2}>
-            <Sphere 
-              args={[0.1, 8, 8]} 
-              position={[
-                Math.sin(i * Math.PI / 6) * 5,
-                Math.cos(i * Math.PI / 6) * 3,
-                Math.sin(i * Math.PI / 4) * 3
-              ]}
-            >
-              <meshStandardMaterial 
-                color="#fbbf24" 
-                transparent 
-                opacity={0.6}
-                emissive="#fbbf24"
-                emissiveIntensity={0.4}
-              />
-            </Sphere>
-          </Float>
-        ))}
-        
-        {/* Enterprise Text */}
+        {/* Industry Label */}
         <Text
-          position={[0, -4, 0]}
-          fontSize={0.8}
-          color="#1f2937"
+          position={[0, -0.8, 0.1]}
+          fontSize={0.2}
+          color="#ffffff"
           anchorX="center"
           anchorY="middle"
         >
-          Enterprise AI
+          {industry}
         </Text>
       </group>
     </Float>
+  );
+};
+
+// Central AI Avatar Component
+const CentralAIAvatar = ({ intensity = 1 }: { intensity?: number }) => {
+  const avatarRef = useRef<THREE.Mesh>(null);
+  const coreRef = useRef<THREE.Mesh>(null);
+  
+  useFrame((state) => {
+    if (avatarRef.current) {
+      avatarRef.current.rotation.y = state.clock.elapsedTime * 0.2;
+    }
+    if (coreRef.current) {
+      coreRef.current.rotation.x = state.clock.elapsedTime * 0.3;
+      coreRef.current.rotation.z = state.clock.elapsedTime * 0.1;
+    }
+  });
+
+  return (
+    <group>
+      {/* Central AI Core */}
+      <Sphere ref={avatarRef} args={[1.2, 64, 64]} position={[0, 0, 0]}>
+        <MeshDistortMaterial 
+          color="#00d4ff" 
+          transparent 
+          opacity={0.7}
+          distort={0.4}
+          speed={3}
+          roughness={0.1}
+          metalness={0.9}
+        />
+      </Sphere>
+      
+      {/* Inner Pulsing Core */}
+      <Sphere ref={coreRef} args={[0.8, 32, 32]} position={[0, 0, 0]}>
+        <meshStandardMaterial 
+          color="#4f46e5" 
+          transparent 
+          opacity={0.5}
+          emissive="#4f46e5"
+          emissiveIntensity={intensity * 0.8}
+        />
+      </Sphere>
+      
+      {/* Voice Rings */}
+      {[...Array(3)].map((_, i) => (
+        <Torus 
+          key={i}
+          args={[2 + i * 0.5, 0.05, 16, 32]} 
+          position={[0, 0, 0]} 
+          rotation={[Math.PI / 2, 0, i * Math.PI / 3]}
+        >
+          <meshStandardMaterial 
+            color="#00ff88" 
+            transparent 
+            opacity={0.6 - i * 0.1}
+            emissive="#00ff88"
+            emissiveIntensity={0.4}
+          />
+        </Torus>
+      ))}
+    </group>
+  );
+};
+
+// Complete Enterprise AI Scene
+const EnterpriseAIScene = ({ intensity = 1 }: { intensity?: number }) => {
+  const sceneRef = useRef<THREE.Group>(null);
+  
+  useFrame((state) => {
+    if (sceneRef.current) {
+      sceneRef.current.rotation.y = state.clock.elapsedTime * 0.05;
+    }
+  });
+
+  const industries = [
+    { name: "Fintech", position: [4, 2, 1], color: "#10b981" },
+    { name: "EdTech", position: [-4, 1, 2], color: "#8b5cf6" },
+    { name: "Healthcare", position: [3, -2, -1], color: "#ef4444" },
+    { name: "Real Estate", position: [-3, -1, -2], color: "#f59e0b" },
+    { name: "E-commerce", position: [0, 3, 3], color: "#06b6d4" },
+  ];
+
+  return (
+    <group ref={sceneRef}>
+      {/* Central AI Avatar */}
+      <CentralAIAvatar intensity={intensity} />
+      
+      {/* Industry Panels */}
+      {industries.map((industry, index) => (
+        <IndustryPanel
+          key={industry.name}
+          position={industry.position as [number, number, number]}
+          rotation={[0, index * Math.PI / 3, 0]}
+          industry={industry.name}
+          color={industry.color}
+        />
+      ))}
+      
+      {/* Connecting Energy Lines */}
+      {industries.map((_, index) => (
+        <Float key={`line-${index}`} speed={1} rotationIntensity={0.1}>
+          <Box 
+            args={[0.02, 3, 0.02]} 
+            position={[
+              Math.sin(index * Math.PI / 3) * 2,
+              0,
+              Math.cos(index * Math.PI / 3) * 2
+            ]}
+            rotation={[0, index * Math.PI / 3, 0]}
+          >
+            <meshStandardMaterial 
+              color="#00d4ff" 
+              transparent 
+              opacity={0.6}
+              emissive="#00d4ff"
+              emissiveIntensity={0.5}
+            />
+          </Box>
+        </Float>
+      ))}
+      
+      {/* Ambient Particles */}
+      {[...Array(20)].map((_, i) => (
+        <Float key={`ambient-${i}`} speed={0.5 + i * 0.1} rotationIntensity={0.1}>
+          <Sphere 
+            args={[0.05, 8, 8]} 
+            position={[
+              (Math.random() - 0.5) * 10,
+              (Math.random() - 0.5) * 6,
+              (Math.random() - 0.5) * 8
+            ]}
+          >
+            <meshStandardMaterial 
+              color="#ffffff" 
+              transparent 
+              opacity={0.4}
+              emissive="#ffffff"
+              emissiveIntensity={0.3}
+            />
+          </Sphere>
+        </Float>
+      ))}
+    </group>
   );
 };
 
@@ -202,36 +286,36 @@ export default function Enterprise() {
   const { scrollYProgress } = useScroll();
   const y = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
 
-  const features = [
+  const industryFeatures = [
     {
-      icon: Headphones,
-      title: "24/7 Voice Support",
-      description: "Intelligent AI agents handle customer inquiries round-the-clock with natural conversation flows."
+      icon: Shield,
+      title: "Fintech Solutions",
+      description: "Voice agents assist with credit card limits, EMI plans, fraud reporting, and auto-KYC voice onboarding for seamless financial services."
     },
     {
       icon: Bot,
-      title: "Sales Automation",
-      description: "Autonomous agents qualify leads, schedule meetings, and guide prospects through your sales funnel."
+      title: "EdTech Integration", 
+      description: "Voice tutors guide students through MCQs, explain complex concepts, and provide conversational doubt resolution during lectures."
     },
     {
-      icon: BarChart3,
-      title: "Real-time Analytics",
-      description: "Track conversation metrics, sentiment analysis, and performance insights in real-time dashboards."
-    },
-    {
-      icon: Shield,
-      title: "Enterprise Security",
-      description: "Bank-level encryption, compliance-ready infrastructure, and secure data handling protocols."
-    },
-    {
-      icon: Zap,
-      title: "Instant Deployment",
-      description: "Deploy AI agents in minutes with pre-built templates and seamless integrations."
+      icon: Headphones,
+      title: "Healthcare Support",
+      description: "HIPAA-compliant voice agents schedule appointments, pre-diagnose symptoms, and handle lab report queries with medical precision."
     },
     {
       icon: Globe,
-      title: "Multi-language Support",
-      description: "Serve global customers with AI agents fluent in 40+ languages and cultural contexts."
+      title: "Real Estate Automation",
+      description: "Voice agents provide property walkthroughs, investment options, and auto-capture buyer interest via voice chat on listings."
+    },
+    {
+      icon: BarChart3,
+      title: "E-commerce Intelligence",
+      description: "AI concierge for high-value shoppers with voice order tracking, return processing, and intelligent product recommendations."
+    },
+    {
+      icon: Zap,
+      title: "Enterprise Integration",
+      description: "Seamless CRM, ERP, and support stack integration with voice-powered AI that speaks fluently and understands business nuance."
     }
   ];
 
@@ -275,7 +359,7 @@ export default function Enterprise() {
             <ambientLight intensity={0.4} />
             <directionalLight position={[10, 10, 5]} intensity={1.5} />
             <pointLight position={[-10, -10, -5]} intensity={0.8} color="#00d4ff" />
-            <HolographicAssistant intensity={1} />
+            <EnterpriseAIScene intensity={1} />
             <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.3} />
             <Environment preset="city" />
           </Canvas>
@@ -294,10 +378,9 @@ export default function Enterprise() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.2 }}
             >
-              Redefining Customer Interactions
-              <br />
-              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                with Enterprise Voice AI
+              Let Your AI Agents Do the{" "}
+              <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                Talking — And Selling
               </span>
             </motion.h1>
             
@@ -307,7 +390,7 @@ export default function Enterprise() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.4 }}
             >
-              Empower your support and sales teams with autonomous, intelligent agents that talk, learn, and close.
+              Deploy voice-driven AI agents tailored for fintech, edtech, healthcare, and more — automating support, driving sales.
             </motion.p>
             
             <motion.p 
@@ -326,22 +409,78 @@ export default function Enterprise() {
               transition={{ duration: 1, delay: 0.8 }}
             >
               <motion.button
-                whileHover={{ scale: 1.05, boxShadow: "0 25px 50px -12px rgba(59, 130, 246, 0.25)" }}
+                whileHover={{ scale: 1.05, boxShadow: "0 25px 50px -12px rgba(6, 182, 212, 0.4)" }}
                 whileTap={{ scale: 0.95 }}
-                className="inline-flex items-center px-10 py-5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full font-bold text-lg shadow-2xl hover:shadow-3xl transition-all duration-300"
+                className="inline-flex items-center px-10 py-5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white rounded-full font-bold text-lg shadow-2xl hover:shadow-3xl transition-all duration-300"
               >
                 <PlayCircle className="mr-3 w-6 h-6" />
-                Try Live Demo
+                Try a Voice Demo
               </motion.button>
               
               <motion.button
                 whileHover={{ scale: 1.05, backgroundColor: "rgba(255, 255, 255, 0.1)" }}
                 whileTap={{ scale: 0.95 }}
-                className="inline-flex items-center px-10 py-5 border-2 border-white text-white rounded-full font-bold text-lg hover:bg-white hover:text-gray-900 transition-all duration-300"
+                className="inline-flex items-center px-10 py-5 border-2 border-cyan-400 text-cyan-400 rounded-full font-bold text-lg hover:bg-cyan-400 hover:text-slate-900 transition-all duration-300"
               >
-                <Calendar className="mr-3 w-6 h-6" />
-                Book a Consultation
+                <Target className="mr-3 w-6 h-6" />
+                See Industry Use Cases
               </motion.button>
+            </motion.div>
+
+            {/* Voice Waveform Indicator */}
+            <motion.div 
+              className="flex items-center justify-center space-x-2 py-6"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1, delay: 1 }}
+            >
+              <Mic className="w-6 h-6 text-cyan-400" />
+              <div className="flex space-x-1">
+                {[...Array(12)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="w-1 bg-gradient-to-t from-blue-400 to-cyan-400 rounded-full"
+                    style={{ height: `${12 + Math.sin(i * 0.5) * 8}px` }}
+                    animate={{
+                      height: [
+                        `${12 + Math.sin(i * 0.5) * 8}px`,
+                        `${20 + Math.sin(i * 0.8) * 12}px`,
+                        `${12 + Math.sin(i * 0.5) * 8}px`
+                      ]
+                    }}
+                    transition={{
+                      duration: 1.5,
+                      repeat: Infinity,
+                      delay: i * 0.1
+                    }}
+                  />
+                ))}
+              </div>
+              <span className="text-cyan-400 text-sm">Voice AI Active</span>
+            </motion.div>
+
+            {/* Industry Marquee */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1, delay: 1.2 }}
+              className="pt-6"
+            >
+              <p className="text-blue-200 text-sm mb-4 text-center">Trusted across industries:</p>
+              <div className="flex flex-wrap gap-4 justify-center">
+                {['Fintech', 'EdTech', 'Healthcare', 'Real Estate', 'E-commerce'].map((industry, index) => (
+                  <motion.span
+                    key={industry}
+                    className="px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm text-white border border-white/20"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5, delay: 1.4 + index * 0.1 }}
+                    whileHover={{ scale: 1.05, backgroundColor: "rgba(255, 255, 255, 0.2)" }}
+                  >
+                    {industry}
+                  </motion.span>
+                ))}
+              </div>
             </motion.div>
           </motion.div>
         </div>
@@ -369,15 +508,15 @@ export default function Enterprise() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Enterprise-Grade AI Capabilities
+              Industry-Specific Voice AI Solutions
             </h2>
             <p className="text-xl text-blue-100 max-w-3xl mx-auto">
-              Powerful features designed to scale with your business and exceed customer expectations.
+              Tailored AI agents that understand your industry's unique needs and deliver measurable business impact.
             </p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
+            {industryFeatures.map((feature, index) => (
               <FeatureCard
                 key={index}
                 icon={feature.icon}

@@ -1,0 +1,104 @@
+Create a cinematic, high-impact 3D Hero Section for a premium enterprise SaaS platform that offers intelligent Voice AI Agents for Sales and Customer Support. The design must fuse cutting-edge visuals with real business use case storytelling across industries. This is not just aesthetic — it’s smart, alive, and conversion-focused.
+
+🧠 Product Context:
+Voice-powered AI agents that speak fluently, understand nuance, auto-resolve queries, guide users, upsell intelligently, and integrate with CRMs, ERPs, and support stacks.
+
+🏭 Industry-Specific Use Cases (to visually and textually represent):
+1. Fintech:
+
+Agent assisting users with credit card limits, EMI plans, fraud reporting.
+
+Auto-KYC voice onboarding.
+
+2. EdTech:
+
+Voice tutor guiding students through MCQs, explaining concepts.
+
+Conversational doubt resolution during lectures or modules.
+
+3. Healthcare:
+
+Voice agent scheduling appointments, pre-diagnosing symptoms.
+
+HIPAA-compliant voice bot handling lab report queries.
+
+4. Real Estate:
+
+Voice agent providing property walkthroughs and investment options.
+
+Auto-capturing buyer interest via voice chat on listing pages.
+
+5. E-commerce:
+
+Voice order tracking, return processing, product recommendations.
+
+AI concierge for high-value shoppers.
+
+Each of these can be hinted at using floating 3D panels or subtle tooltips when hovered on.
+
+🌐 Design and Layout Specifications:
+Left Section (Content Focus):
+
+Headline: "Let Your AI Agents Do the Talking — And Selling"
+
+Subheadline: "Deploy voice-driven AI agents tailored for fintech, edtech, healthcare, and more — automating support, driving sales."
+
+Two CTAs: "Try a Voice Demo" and "See Industry Use Cases"
+
+Below CTAs: Rotating marquee or carousel of industries served, with mini-icons or scene previews.
+
+Right Section (Visual Brilliance):
+
+Spline or Three.js-based interactive 3D scene:
+
+AI avatar at the center, surrounded by orbiting UI panels:
+
+One shows a healthcare appointment booking screen.
+
+Another a credit card support chat.
+
+A floating map for real estate.
+
+Education MCQs with a mic icon.
+
+E-commerce cart and order details.
+
+Each panel gently rotates, pulses or activates on hover.
+
+Background: Deep blue-black with ambient particles, neon glow trails, and soft flares.
+
+💻 Tech Stack and Enhancements:
+React + TailwindCSS for base UI
+
+Spline embed or Three.js for interactive hero scene
+
+Framer Motion for smooth scroll, hover, and entrance animations
+
+Lottie for fallback on mobile
+
+Optional: Use Valtio for 3D state handling or integrate GSAP for advanced animation control
+
+🧬 Bonus Intelligent Elements:
+Dynamic voice waveform under headline that reacts on scroll or mic hover
+
+Real-time testimonials from industry clients sliding in as voice bubbles
+
+A “Schedule AI Agent Strategy Call” sticky CTA with a glowing ring
+
+Trust signals: logos, ISO certification badge, data privacy note subtly included
+
+Tone and Feel:
+Futuristic but grounded.
+
+Premium enterprise SaaS vibe — not consumer tech.
+
+Blend of high-trust UX + awe-inspiring visuals.
+
+Clear ROI messaging through design and layout.
+
+Device Responsiveness:
+3D replaced with static illustrated SVGs or GIFs on mobile
+
+Layout vertically stacked with collapsible industry use case sections
+
+Make this hero section feel like a digital command center of an AI revolution."
