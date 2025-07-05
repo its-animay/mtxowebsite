@@ -126,7 +126,8 @@ const CrystallineCore: React.FC<CrystallineCoreProps> = ({
             roughness={0.05}
             metalness={1.0}
             envMapIntensity={2}
-
+            clearcoat={1.0}
+            clearcoatRoughness={0.1}
           />
         </Icosahedron>
       </Float>

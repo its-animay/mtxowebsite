@@ -8,7 +8,6 @@ import AnimatedBrain from '../components/3d/AnimatedBrain';
 import FloatingCubes from '../components/3d/FloatingCubes';
 import ParticleSystem from '../components/3d/ParticleSystem';
 import CrystallineCore from '../components/3d/CrystallineCore';
-import HolographicPortal from '../components/3d/HolographicPortal';
 import GlassCard from '../components/ui/GlassCard';
 import VoicePlayer from '../components/ui/VoicePlayer';
 import ChatBot from '../components/ui/ChatBot';
@@ -54,131 +53,68 @@ const Homepage = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Enhanced Hero Section */}
-      <section 
-        className="relative h-screen flex items-center justify-center overflow-hidden"
-        style={{
-          background: `
-            linear-gradient(135deg, 
-              #0f0f23 0%, 
-              #1a1a2e 25%, 
-              #16213e 50%, 
-              #1a1a2e 75%, 
-              #0f0f23 100%
-            ),
-            radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
-            radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%)
-          `
-        }}
-      >
-        {/* Enhanced 3D Background with Depth */}
-        <div className="absolute inset-0 z-0" style={{ filter: 'blur(0.5px)' }}>
+      {/* Hero Section */}
+      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+        {/* 3D Background */}
+        <div className="absolute inset-0 z-0">
           <Canvas>
-            <PerspectiveCamera makeDefault position={[0, 0, 12]} />
-            <ambientLight intensity={0.3} />
-            <directionalLight position={[10, 10, 5]} intensity={0.8} color="#ffffff" />
+            <PerspectiveCamera makeDefault position={[0, 0, 10]} />
+            <ambientLight intensity={0.5} />
+            <directionalLight position={[10, 10, 5]} intensity={1} />
             <Suspense fallback={null}>
-              <HolographicPortal position={[0, 0, 0]} scale={1.2} intensity={1.1} />
-              <CrystallineCore scale={0.8} intensity={0.7} showText={false} />
-              <FloatingCubes count={12} spread={25} />
-              <ParticleSystem count={2000} radius={35} />
+              <CrystallineCore scale={1.5} intensity={1.2} showText={false} />
+              <FloatingCubes count={15} spread={20} />
+              <ParticleSystem count={3000} radius={30} />
             </Suspense>
-            <OrbitControls 
-              enableZoom={false} 
-              enablePan={false} 
-              autoRotate 
-              autoRotateSpeed={0.3}
-              maxPolarAngle={Math.PI / 2}
-              minPolarAngle={Math.PI / 2}
-            />
+            <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.5} />
             <Environment preset="night" />
           </Canvas>
         </div>
 
-        {/* Hero Content with Glassmorphism */}
-        <div className="relative z-10 flex items-center justify-center min-h-screen px-4">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 30 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ duration: 1, ease: "easeOut" }}
-            className="text-center max-w-4xl mx-auto"
-            style={{
-              background: 'rgba(0, 0, 0, 0.4)',
-              backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)', // Safari support
-              borderRadius: '20px',
-              padding: '2rem 1.5rem',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)'
-            }}
-            className="backdrop-blur-sm" // Fallback for older browsers
+        {/* Hero Content */}
+        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-5xl md:text-7xl font-bold text-white mb-6 neon-text"
           >
-            <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-5xl md:text-7xl font-bold text-white mb-6"
-              style={{
-                textShadow: '0 0 12px rgba(255, 255, 255, 0.6), 0 0 24px rgba(0, 255, 255, 0.4)',
-                background: 'linear-gradient(135deg, #ffffff 0%, #00ffff 50%, #ff00ff 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text'
-              }}
-            >
-              AI-Powered Learning
-            </motion.h1>
-            
-            <motion.p
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-xl md:text-2xl text-gray-200 mb-8"
-              style={{
-                textShadow: '0 0 8px rgba(255, 255, 255, 0.3)'
-              }}
-            >
-              Voice Agents. Intelligent Tutors. Self-Paced Courses.
-            </motion.p>
-            
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center"
-            >
-              <motion.div 
-                whileHover={{ scale: 1.05, boxShadow: '0 0 20px rgba(59, 130, 246, 0.5)' }} 
-                whileTap={{ scale: 0.95 }}
+            AI-Powered Learning
+          </motion.h1>
+          
+          <motion.p
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-xl md:text-2xl text-gray-300 mb-8"
+          >
+            Voice Agents. Intelligent Tutors. Adaptive Learning.
+          </motion.p>
+          
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="flex flex-col sm:flex-row gap-4 justify-center"
+          >
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Link
+                to="/how-it-works"
+                className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-200 shadow-lg"
               >
-                <Link
-                  to="/how-it-works"
-                  className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-200 shadow-lg"
-                  style={{
-                    boxShadow: '0 4px 15px rgba(59, 130, 246, 0.3)'
-                  }}
-                >
-                  Explore Platform
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </Link>
-              </motion.div>
-              
-              <motion.div 
-                whileHover={{ scale: 1.05, boxShadow: '0 0 20px rgba(255, 255, 255, 0.3)' }} 
-                whileTap={{ scale: 0.95 }}
+                Explore Platform
+                <ArrowRight className="ml-2 w-5 h-5" />
+              </Link>
+            </motion.div>
+            
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Link
+                to="/contact"
+                className="inline-flex items-center px-8 py-4 bg-transparent border-2 border-white text-white rounded-full font-semibold hover:bg-white hover:text-gray-900 transition-all duration-200"
               >
-                <Link
-                  to="/contact"
-                  className="inline-flex items-center px-8 py-4 bg-transparent border-2 border-white/60 text-white rounded-full font-semibold hover:bg-white/20 hover:border-white transition-all duration-200"
-                  style={{
-                    backdropFilter: 'blur(8px)',
-                    background: 'rgba(255, 255, 255, 0.1)'
-                  }}
-                >
-                  Book Demo
-                  <Play className="ml-2 w-5 h-5" />
-                </Link>
-              </motion.div>
+                Book Demo
+                <Play className="ml-2 w-5 h-5" />
+              </Link>
             </motion.div>
           </motion.div>
         </div>
