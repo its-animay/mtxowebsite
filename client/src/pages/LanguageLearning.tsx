@@ -261,53 +261,37 @@ export default function LanguageLearning() {
           </Canvas>
         </div>
 
-        {/* Hero Content - Positioned to work with 3D animation */}
-        <div className="relative z-10 text-center max-w-4xl mx-auto mt-20">
+        {/* CTA Button positioned at bottom */}
+        <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-10">
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.2, delay: 8 }} // Delayed to show after 3D animation
-            className="mt-12"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 9 }}
           >
-            <motion.p
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 8.5 }}
-              className="text-lg text-gray-700 mb-8 max-w-2xl mx-auto bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-xl"
-            >
-              Practice real conversations, get corrections, and build fluency — all through interactive voice with your personal AI tutor.
-            </motion.p>
-            
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 9 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              animate={{
+                boxShadow: [
+                  "0 0 20px rgba(79, 172, 254, 0.5)",
+                  "0 0 30px rgba(79, 172, 254, 0.8)",
+                  "0 0 20px rgba(79, 172, 254, 0.5)"
+                ]
+              }}
+              transition={{
+                boxShadow: { duration: 2, repeat: Infinity }
+              }}
             >
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                animate={{
-                  boxShadow: [
-                    "0 0 20px rgba(79, 172, 254, 0.5)",
-                    "0 0 30px rgba(79, 172, 254, 0.8)",
-                    "0 0 20px rgba(79, 172, 254, 0.5)"
-                  ]
-                }}
-                transition={{
-                  boxShadow: { duration: 2, repeat: Infinity }
-                }}
+              <Link
+                to="/contact"
+                className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full font-bold text-lg shadow-2xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300"
+                style={{ fontFamily: "'Poppins', sans-serif" }}
+                onClick={() => setIsPlaying(!isPlaying)}
               >
-                <Link
-                  to="/contact"
-                  className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full font-bold text-lg shadow-2xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300"
-                  style={{ fontFamily: "'Poppins', sans-serif" }}
-                  onClick={() => setIsPlaying(!isPlaying)}
-                >
-                  <Mic className="mr-3 w-6 h-6" />
-                  🎤 Try a Voice Demo
-                  <ArrowRight className="ml-3 w-6 h-6" />
-                </Link>
-              </motion.div>
+                <Mic className="mr-3 w-6 h-6" />
+                🎤 Try a Voice Demo
+                <ArrowRight className="ml-3 w-6 h-6" />
+              </Link>
             </motion.div>
           </motion.div>
         </div>
