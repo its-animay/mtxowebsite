@@ -3,7 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Environment, PerspectiveCamera } from '@react-three/drei';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Upload, Database, Brain, MessageSquare, Play, ArrowRight, CheckCircle, Zap } from 'lucide-react';
+import { Upload, Database, Brain, MessageSquare, Play, ArrowRight, CheckCircle, Zap, TrendingUp, Shield, Link as LinkIcon } from 'lucide-react';
 import GlassCard from '../components/ui/GlassCard';
 import VoicePlayer from '../components/ui/VoicePlayer';
 import SystemDiagram from '../components/3d/SystemDiagram';
@@ -85,7 +85,7 @@ const HowItWorks = () => {
     {
       title: 'Easy Integration',
       description: 'Seamlessly integrates with existing learning management systems',
-      icon: Link
+      icon: LinkIcon
     }
   ];
 

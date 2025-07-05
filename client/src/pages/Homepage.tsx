@@ -7,6 +7,7 @@ import { ArrowRight, Play, BookOpen, MessageSquare, Users, Zap, Globe } from 'lu
 import AnimatedBrain from '../components/3d/AnimatedBrain';
 import FloatingCubes from '../components/3d/FloatingCubes';
 import ParticleSystem from '../components/3d/ParticleSystem';
+import CrystallineCore from '../components/3d/CrystallineCore';
 import GlassCard from '../components/ui/GlassCard';
 import VoicePlayer from '../components/ui/VoicePlayer';
 import ChatBot from '../components/ui/ChatBot';
@@ -61,7 +62,7 @@ const Homepage = () => {
             <ambientLight intensity={0.5} />
             <directionalLight position={[10, 10, 5]} intensity={1} />
             <Suspense fallback={null}>
-              <AnimatedBrain />
+              <CrystallineCore scale={1.5} intensity={1.2} showText={false} />
               <FloatingCubes count={15} spread={20} />
               <ParticleSystem count={3000} radius={30} />
             </Suspense>
