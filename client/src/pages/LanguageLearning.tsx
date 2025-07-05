@@ -6,7 +6,9 @@ import { Link } from 'react-router-dom';
 import { Volume2, Mic, Play, Star, Users, Clock, ArrowRight, MessageCircle } from 'lucide-react';
 import GlassCard from '../components/ui/GlassCard';
 import VoicePlayer from '../components/ui/VoicePlayer';
-import VoiceWave from '../components/3d/VoiceWave';
+import AnimatedPanda from '../components/3d/AnimatedPanda';
+import MagicalElements from '../components/3d/MagicalElements';
+import SoundWave from '../components/3d/SoundWave';
 import * as THREE from 'three';
 
 // 3D Animated Teaching Character
@@ -165,54 +167,111 @@ const LanguageLearning = () => {
 
   return (
     <div className="min-h-screen pt-16">
-      {/* Hero Section with 3D Character */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+      {/* Magical Hero Section for Kids */}
+      <section className="relative h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-pink-200 via-purple-200 to-blue-200">
         <div className="absolute inset-0 z-0">
           <Canvas>
-            <PerspectiveCamera makeDefault position={[0, 0, 8]} />
-            <ambientLight intensity={0.6} />
-            <directionalLight position={[10, 10, 5]} intensity={1} />
+            <PerspectiveCamera makeDefault position={[0, 0, 10]} />
             <Suspense fallback={null}>
-              <TeachingCharacter />
-              <VoiceWave isPlaying={isPlaying} amplitude={2} frequency={3} />
+              <AnimatedPanda position={[0, -1, 0]} scale={1.2} isHovered={isPlaying} />
+              <MagicalElements count={15} spread={12} />
+              <SoundWave isPlaying={isPlaying} intensity={1.5} color="#ff69b4" />
             </Suspense>
-            <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.3} />
-            <Environment preset="dawn" />
+            <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.1} />
+            <Environment preset="sunset" />
           </Canvas>
         </div>
 
-        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-5xl md:text-6xl font-bold text-white mb-6 neon-text"
+        <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
+          {/* Glass backdrop container */}
+          <div 
+            className="bg-black/20 backdrop-blur-xl rounded-3xl p-8 border border-white/20 shadow-2xl"
+            style={{
+              backdropFilter: "blur(14px)",
+              background: "rgba(255, 255, 255, 0.1)"
+            }}
           >
-            Voice Learning for Kids
-          </motion.h1>
-          
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-xl text-gray-300 mb-8"
-          >
-            Interactive AI characters make language learning fun and engaging for children
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-          >
-            <Link
-              to="/contact"
-              className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-full font-semibold hover:from-purple-600 hover:to-pink-700 transition-all duration-200 shadow-lg"
+            <motion.h1
+              initial={{ opacity: 0, scale: 0.8, filter: "blur(10px)" }}
+              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+              transition={{ 
+                duration: 1.2, 
+                ease: "easeOut",
+                delay: 0.5
+              }}
+              className="text-5xl md:text-6xl font-bold mb-6"
+              style={{
+                fontFamily: "'Comic Neue', 'Baloo 2', 'Poppins', cursive",
+                color: "#2d3748",
+                textShadow: "0 0 15px rgba(255, 255, 255, 0.8), 0 0 30px rgba(255, 255, 255, 0.4)"
+              }}
             >
-              Try a Voice Demo
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Link>
-          </motion.div>
+              🎈 Voice Learning for Kids 🌟
+            </motion.h1>
+            
+            <motion.p
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ 
+                duration: 1.0, 
+                ease: "easeOut",
+                delay: 0.8
+              }}
+              className="text-xl mb-8"
+              style={{
+                fontFamily: "'Baloo 2', 'Comic Neue', cursive",
+                color: "#4a5568",
+                textShadow: "0 0 8px rgba(255, 255, 255, 0.3)"
+              }}
+            >
+              🐼 Meet your friendly AI panda teacher! Learn languages through fun conversations, songs, and magical stories! ✨
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ 
+                duration: 1.0, 
+                ease: "backOut",
+                delay: 1.1
+              }}
+            >
+              <motion.div
+                whileHover={{ 
+                  scale: 1.1,
+                  rotate: [0, -2, 2, 0],
+                  boxShadow: "0 0 25px rgba(255, 105, 180, 0.6)"
+                }}
+                whileTap={{ scale: 0.9 }}
+                animate={{
+                  y: [0, -5, 0],
+                  boxShadow: [
+                    "0 5px 15px rgba(255, 105, 180, 0.4)",
+                    "0 10px 25px rgba(255, 105, 180, 0.6)",
+                    "0 5px 15px rgba(255, 105, 180, 0.4)"
+                  ]
+                }}
+                transition={{
+                  y: { duration: 2, repeat: Infinity, ease: "easeInOut" },
+                  boxShadow: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+                }}
+                className="inline-block"
+              >
+                <Link
+                  to="/contact"
+                  className="inline-flex items-center px-8 py-4 text-white rounded-full font-bold text-lg transition-all duration-300 shadow-2xl"
+                  style={{
+                    fontFamily: "'Baloo 2', 'Comic Neue', cursive",
+                    background: "linear-gradient(45deg, #ff69b4, #ff1493, #ff6347)",
+                    border: "3px solid rgba(255, 255, 255, 0.3)"
+                  }}
+                >
+                  🎤 Try Voice Chat! 🌟
+                  <ArrowRight className="ml-2 w-6 h-6" />
+                </Link>
+              </motion.div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
