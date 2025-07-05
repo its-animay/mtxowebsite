@@ -26,6 +26,7 @@ import {
 import AnimatedPanda from '../components/3d/AnimatedPanda';
 import MagicalElements from '../components/3d/MagicalElements';
 import SoundWave from '../components/3d/SoundWave';
+import VoiceBridgeAnimation from '../components/3d/VoiceBridgeAnimation';
 import VoicePlayer from '../components/ui/VoicePlayer';
 import GlassCard from '../components/ui/GlassCard';
 
@@ -245,70 +246,34 @@ export default function LanguageLearning() {
       <section className="relative min-h-screen flex items-center justify-center px-4">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-purple-600/20 to-pink-600/20" />
         
-        {/* 3D Scene */}
+        {/* Immersive 3D Voice Bridge Animation */}
         <div className="absolute inset-0 z-0">
           <Canvas>
-            <PerspectiveCamera makeDefault position={[0, 0, 5]} />
+            <PerspectiveCamera makeDefault position={[0, 0, 6]} />
             <OrbitControls enableZoom={false} enablePan={false} />
             
-            <ambientLight intensity={0.4} />
-            <directionalLight position={[5, 5, 5]} intensity={1} />
-            
-            <group position={[2, 0, 0]}>
-              <AnimatedPanda scale={0.8} isHovered={false} />
-            </group>
-            
-            <group position={[-2, 1, 0]}>
-              <MagicalElements count={8} spread={3} />
-            </group>
-            
-            <group position={[0, -1, 0]}>
-              <SoundWave isPlaying={isPlaying} intensity={0.5} />
-            </group>
+            <VoiceBridgeAnimation 
+              isActive={true} 
+              onComplete={() => console.log('Animation complete')} 
+            />
             
             <Environment preset="sunset" />
           </Canvas>
         </div>
 
-        {/* Hero Content */}
-        <div className="relative z-10 text-center max-w-4xl mx-auto">
+        {/* Hero Content - Positioned to work with 3D animation */}
+        <div className="relative z-10 text-center max-w-4xl mx-auto mt-20">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
-            className="bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20 shadow-2xl"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.2, delay: 8 }} // Delayed to show after 3D animation
+            className="mt-12"
           >
-            <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-5xl md:text-7xl font-bold mb-6"
-              style={{
-                fontFamily: "'Poppins', 'Nunito', sans-serif",
-                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
-              Speak. Learn. Grow.
-            </motion.h1>
-            
             <motion.p
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-2xl md:text-3xl font-semibold text-white mb-4"
-              style={{ fontFamily: "'Poppins', sans-serif" }}
-            >
-              Voice-Based Language Learning Powered by AI
-            </motion.p>
-            
-            <motion.p
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              className="text-lg text-gray-200 mb-8 max-w-2xl mx-auto"
+              transition={{ duration: 0.8, delay: 8.5 }}
+              className="text-lg text-gray-700 mb-8 max-w-2xl mx-auto bg-white/90 backdrop-blur-sm rounded-2xl p-6 shadow-xl"
             >
               Practice real conversations, get corrections, and build fluency — all through interactive voice with your personal AI tutor.
             </motion.p>
@@ -316,7 +281,7 @@ export default function LanguageLearning() {
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.8 }}
+              transition={{ duration: 0.8, delay: 9 }}
             >
               <motion.div
                 whileHover={{ scale: 1.05 }}
