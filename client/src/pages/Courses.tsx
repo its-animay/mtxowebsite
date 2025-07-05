@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { BookOpen, Play, Clock, Users, Star, ArrowRight, CheckCircle } from 'lucide-react';
 import GlassCard from '../components/ui/GlassCard';
 import VoicePlayer from '../components/ui/VoicePlayer';
+import FuturisticHero from '../components/3d/FuturisticHero';
 import * as THREE from 'three';
 
 // 3D Course Dashboard Component
@@ -138,52 +139,95 @@ const Courses = () => {
 
   return (
     <div className="min-h-screen pt-16">
-      {/* Hero Section with 3D */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+      {/* Futuristic Hero Section */}
+      <section className="relative h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-indigo-900 via-purple-900 to-violet-900">
         <div className="absolute inset-0 z-0">
           <Canvas>
-            <PerspectiveCamera makeDefault position={[0, 0, 8]} />
-            <ambientLight intensity={0.5} />
-            <directionalLight position={[10, 10, 5]} intensity={1} />
+            <PerspectiveCamera makeDefault position={[0, 0, 12]} />
             <Suspense fallback={null}>
-              <CourseDashboard />
+              <FuturisticHero scale={1} intensity={1.2} showOrb={true} />
             </Suspense>
-            <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.5} />
+            <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.2} />
             <Environment preset="night" />
           </Canvas>
         </div>
 
         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
           <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-5xl md:text-6xl font-bold text-white mb-6 neon-text"
+            initial={{ opacity: 0, scale: 0.8, filter: "blur(10px)" }}
+            animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+            transition={{ 
+              duration: 1.2, 
+              ease: "easeOut",
+              delay: 0.5
+            }}
+            className="text-5xl md:text-6xl font-bold text-white mb-6"
+            style={{
+              textShadow: "0 0 20px rgba(139, 92, 246, 0.8), 0 0 40px rgba(139, 92, 246, 0.4), 0 0 80px rgba(139, 92, 246, 0.2)",
+              filter: "drop-shadow(0 0 10px rgba(255, 255, 255, 0.3))"
+            }}
           >
             Self-Paced Courses
           </motion.h1>
           
           <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ 
+              duration: 1.0, 
+              ease: "easeOut",
+              delay: 0.8
+            }}
             className="text-xl text-gray-300 mb-8"
+            style={{
+              textShadow: "0 0 10px rgba(255, 255, 255, 0.2)"
+            }}
           >
             Learn at your own pace with AI-powered personalized learning paths
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ 
+              duration: 1.0, 
+              ease: "easeOut",
+              delay: 1.1
+            }}
           >
-            <Link
-              to="/contact"
-              className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full font-semibold hover:from-blue-600 hover:to-purple-700 transition-all duration-200 shadow-lg"
+            <motion.div
+              whileHover={{ 
+                scale: 1.05,
+                boxShadow: "0 0 30px rgba(139, 92, 246, 0.6), 0 0 60px rgba(139, 92, 246, 0.3)"
+              }}
+              whileTap={{ scale: 0.95 }}
+              animate={{
+                boxShadow: [
+                  "0 0 20px rgba(139, 92, 246, 0.4)",
+                  "0 0 40px rgba(139, 92, 246, 0.6)",
+                  "0 0 20px rgba(139, 92, 246, 0.4)"
+                ]
+              }}
+              transition={{
+                boxShadow: {
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }
+              }}
             >
-              Start Learning with AI Tutor
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Link>
+              <Link
+                to="/contact"
+                className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-violet-500 to-purple-600 text-white rounded-full font-semibold hover:from-violet-600 hover:to-purple-700 transition-all duration-300 shadow-lg backdrop-blur-sm border border-violet-400/30"
+                style={{
+                  background: "linear-gradient(135deg, rgba(139, 92, 246, 0.9) 0%, rgba(147, 51, 234, 0.9) 100%)",
+                  backdropFilter: "blur(10px)"
+                }}
+              >
+                Start Learning with AI Tutor
+                <ArrowRight className="ml-2 w-5 h-5" />
+              </Link>
+            </motion.div>
           </motion.div>
         </div>
       </section>
