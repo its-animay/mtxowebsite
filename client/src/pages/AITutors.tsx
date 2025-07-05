@@ -1,440 +1,590 @@
-import React, { Suspense } from 'react';
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Environment, PerspectiveCamera } from '@react-three/drei';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { GraduationCap, Users, BookOpen, TrendingUp, Upload, Brain, ArrowRight, CheckCircle } from 'lucide-react';
+import { Canvas } from '@react-three/fiber';
+import { Environment, OrbitControls, Float, Text, Sphere, Box } from '@react-three/drei';
+import { 
+  Upload, 
+  Brain, 
+  Users, 
+  MessageCircle, 
+  BarChart3, 
+  Mic, 
+  BookOpen, 
+  Settings, 
+  Shield, 
+  Clock,
+  PhoneCall,
+  Rocket,
+  Volume2,
+  GraduationCap,
+  Target,
+  TrendingUp
+} from 'lucide-react';
 import GlassCard from '../components/ui/GlassCard';
 import VoicePlayer from '../components/ui/VoicePlayer';
-import SchoolModel from '../components/3d/SchoolModel';
+import ChatBot from '../components/ui/ChatBot';
 
-const AITutors = () => {
-  const benefits = [
-    {
-      icon: GraduationCap,
-      title: '24/7 Personalized Support',
-      description: 'AI tutors available round the clock to help every student'
-    },
-    {
-      icon: Users,
-      title: 'Scalable for Any Institution',
-      description: 'From small schools to large universities, our AI scales with you'
-    },
-    {
-      icon: BookOpen,
-      title: 'Curriculum Integration',
-      description: 'Seamlessly integrates with existing educational content'
-    },
-    {
-      icon: TrendingUp,
-      title: 'Improved Learning Outcomes',
-      description: 'Data-driven insights help improve student performance'
-    }
-  ];
+// 3D AI Orb Component for Hero Section
+const AIOrb = ({ intensity = 1 }: { intensity?: number }) => {
+  return (
+    <Float speed={2} rotationIntensity={0.5} floatIntensity={0.8}>
+      <group>
+        {/* Main AI Orb */}
+        <Sphere args={[2, 64, 64]} position={[0, 0, 0]}>
+          <meshStandardMaterial 
+            color="#4f46e5" 
+            transparent 
+            opacity={0.7}
+            emissive="#3b82f6"
+            emissiveIntensity={intensity * 0.3}
+            roughness={0.1}
+            metalness={0.9}
+          />
+        </Sphere>
+        
+        {/* Outer Ring */}
+        <group rotation={[0, 0, Math.PI / 4]}>
+          <Sphere args={[2.5, 32, 32]} position={[0, 0, 0]}>
+            <meshStandardMaterial 
+              color="#06b6d4" 
+              transparent 
+              opacity={0.2}
+              wireframe
+            />
+          </Sphere>
+        </group>
+        
+        {/* Floating Books */}
+        {[...Array(8)].map((_, i) => (
+          <Float key={i} speed={1 + i * 0.2} rotationIntensity={0.3}>
+            <Box 
+              args={[0.3, 0.4, 0.1]} 
+              position={[
+                Math.sin(i * Math.PI / 4) * 4,
+                Math.cos(i * Math.PI / 4) * 2,
+                Math.sin(i * Math.PI / 3) * 3
+              ]}
+            >
+              <meshStandardMaterial color="#f59e0b" />
+            </Box>
+          </Float>
+        ))}
+        
+        {/* School Text */}
+        <Text
+          position={[0, -3.5, 0]}
+          fontSize={0.8}
+          color="#1f2937"
+          anchorX="center"
+          anchorY="middle"
+        >
+          Your School
+        </Text>
+      </group>
+    </Float>
+  );
+};
 
-  const implementation = [
+// Animated Step Component
+const AnimatedStep = ({ step, title, description, icon: Icon, delay = 0 }: {
+  step: number;
+  title: string;
+  description: string;
+  icon: any;
+  delay?: number;
+}) => (
+  <motion.div
+    initial={{ opacity: 0, y: 50 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.6, delay }}
+    className="relative"
+  >
+    <GlassCard className="p-8 text-center hover:scale-105 transition-transform duration-300">
+      <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
+        <Icon className="w-8 h-8 text-white" />
+      </div>
+      <div className="w-10 h-10 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">
+        {step}
+      </div>
+      <h3 className="text-xl font-bold text-gray-800 mb-4">{title}</h3>
+      <p className="text-gray-600 leading-relaxed">{description}</p>
+    </GlassCard>
+  </motion.div>
+);
+
+// Personalization Card Component
+const PersonalizationCard = ({ title, description, icon: Icon, color }: {
+  title: string;
+  description: string;
+  icon: any;
+  color: string;
+}) => (
+  <motion.div
+    whileHover={{ scale: 1.05, y: -5 }}
+    className="relative group"
+  >
+    <GlassCard className="p-6 h-full">
+      <div className={`w-12 h-12 ${color} rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
+        <Icon className="w-6 h-6 text-white" />
+      </div>
+      <h3 className="text-lg font-semibold text-gray-800 mb-2">{title}</h3>
+      <p className="text-gray-600 text-sm">{description}</p>
+    </GlassCard>
+  </motion.div>
+);
+
+// Value Proposition Card
+const ValueCard = ({ icon: Icon, title, description }: {
+  icon: any;
+  title: string;
+  description: string;
+}) => (
+  <motion.div
+    whileHover={{ scale: 1.02 }}
+    className="group"
+  >
+    <GlassCard className="p-6 text-center">
+      <motion.div
+        animate={{ 
+          boxShadow: [
+            "0 0 20px rgba(59, 130, 246, 0.3)",
+            "0 0 30px rgba(59, 130, 246, 0.6)",
+            "0 0 20px rgba(59, 130, 246, 0.3)"
+          ]
+        }}
+        transition={{ duration: 2, repeat: Infinity }}
+        className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4"
+      >
+        <Icon className="w-8 h-8 text-white" />
+      </motion.div>
+      <h3 className="text-lg font-semibold text-gray-800 mb-2">{title}</h3>
+      <p className="text-gray-600 text-sm">{description}</p>
+    </GlassCard>
+  </motion.div>
+);
+
+export default function AITutors() {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
+  const [activeDemo, setActiveDemo] = useState('voice');
+
+  const steps = [
     {
       step: 1,
-      title: 'Content Upload',
-      description: 'Upload your curriculum, textbooks, and teaching materials',
+      title: "Upload Your Content",
+      description: "Upload PDFs, documents, syllabi, and teaching materials. Our AI processes and understands your curriculum.",
       icon: Upload
     },
     {
       step: 2,
-      title: 'AI Training',
-      description: 'Our AI learns your specific curriculum and teaching style',
+      title: "AI Auto-Learning",
+      description: "Advanced AI automatically learns and organizes topics, creating structured knowledge bases for your subjects.",
       icon: Brain
     },
     {
       step: 3,
-      title: 'Tutor Deployment',
-      description: 'Deploy personalized AI tutors across your institution',
+      title: "Choose Tutor Personality",
+      description: "Select the perfect teaching style, tone, and personality that matches your school's culture and values.",
       icon: Users
     },
     {
       step: 4,
-      title: 'Monitor & Optimize',
-      description: 'Track performance and continuously improve the system',
-      icon: TrendingUp
+      title: "Voice & Chat Ready",
+      description: "Students can ask questions through voice or chat. AI responds instantly with personalized explanations.",
+      icon: MessageCircle
+    },
+    {
+      step: 5,
+      title: "Analytics & Insights",
+      description: "Get detailed insights on student performance, common questions, and areas that need attention.",
+      icon: BarChart3
     }
   ];
 
-  const testimonials = [
+  const personalizationFeatures = [
     {
-      name: 'Dr. Sarah Johnson',
-      role: 'Dean of Education, Springfield University',
-      quote: 'Our AI tutors have transformed how students learn. 24/7 support has increased engagement by 300%.',
-      rating: 5
+      title: "Custom AI Persona",
+      description: "Create branded tutors like 'Mrs. Nair - Class 10 History Tutor' with unique personalities.",
+      icon: GraduationCap,
+      color: "bg-gradient-to-r from-pink-500 to-rose-600"
     },
     {
-      name: 'Michael Chen',
-      role: 'IT Director, Lincoln High School',
-      quote: 'Implementation was seamless. Teachers love having AI assistants that understand our curriculum.',
-      rating: 5
+      title: "Voice & Accent",
+      description: "Choose from multiple voice tones, accents, and speaking styles to match your region.",
+      icon: Volume2,
+      color: "bg-gradient-to-r from-blue-500 to-cyan-600"
     },
     {
-      name: 'Prof. Emily Rodriguez',
-      role: 'Computer Science, Tech Institute',
-      quote: 'The AI tutors adapt to each student\'s learning pace. We\'ve seen remarkable improvement in outcomes.',
-      rating: 5
+      title: "Curriculum Tagging",
+      description: "Support for CBSE, ICSE, IB, and custom curriculum frameworks with proper tagging.",
+      icon: BookOpen,
+      color: "bg-gradient-to-r from-green-500 to-emerald-600"
+    },
+    {
+      title: "School Branding",
+      description: "Integrate your school's logo, colors, and brand voice into the AI tutor experience.",
+      icon: Settings,
+      color: "bg-gradient-to-r from-purple-500 to-indigo-600"
+    }
+  ];
+
+  const valuePropositions = [
+    {
+      icon: Clock,
+      title: "24/7 AI Support",
+      description: "Always available tutoring that never sleeps, helping students learn at their own pace."
+    },
+    {
+      icon: Volume2,
+      title: "Voice-First Learning",
+      description: "Natural conversation-based learning with emotion-aware responses and interactive dialogue."
+    },
+    {
+      icon: Target,
+      title: "LMS Integration",
+      description: "Seamlessly integrates with Google Classroom, Moodle, Canvas, and other learning management systems."
+    },
+    {
+      icon: Shield,
+      title: "Secure & Private",
+      description: "Institution-specific data sandbox with enterprise-grade security and privacy protection."
     }
   ];
 
   return (
-    <div className="min-h-screen pt-16">
-      {/* Hero Section with 3D School */}
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
+      {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
+        {/* Background 3D Scene */}
         <div className="absolute inset-0 z-0">
-          <Canvas>
-            <PerspectiveCamera makeDefault position={[0, 2, 12]} />
-            <ambientLight intensity={0.5} />
+          <Canvas camera={{ position: [0, 0, 10], fov: 50 }}>
+            <ambientLight intensity={0.3} />
             <directionalLight position={[10, 10, 5]} intensity={1} />
-            <Suspense fallback={null}>
-              <SchoolModel />
-            </Suspense>
-            <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.4} />
-            <Environment preset="sunset" />
+            <AIOrb intensity={1} />
+            <OrbitControls enableZoom={false} enablePan={false} />
+            <Environment preset="city" />
           </Canvas>
         </div>
 
-        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
+        {/* Hero Content */}
+        <div className="relative z-10 text-center max-w-5xl mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-5xl md:text-6xl font-bold text-white mb-6 neon-text"
+            transition={{ duration: 1.2 }}
           >
-            AI Tutors for Schools
-          </motion.h1>
-          
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-xl text-gray-300 mb-8"
-          >
-            Intelligent tutoring systems that understand your curriculum and adapt to every student
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-          >
-            <Link
-              to="/contact"
-              className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-green-500 to-teal-600 text-white rounded-full font-semibold hover:from-green-600 hover:to-teal-700 transition-all duration-200 shadow-lg"
-            >
-              Create a Custom AI Tutor
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Link>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Benefits Section */}
-      <section className="py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl font-bold text-white mb-6">
-              Transform Your Institution
-            </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Our AI tutors integrate seamlessly with your existing curriculum to provide personalized learning experiences
+            <h1 className="text-6xl md:text-7xl font-bold text-gray-900 mb-6 leading-tight">
+              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                AI Tutors
+              </span>
+              <br />
+              Built for Your Students
+            </h1>
+            <p className="text-xl md:text-2xl text-gray-700 mb-4 max-w-3xl mx-auto">
+              Train your own voice assistant with your content, style, and voice.
             </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {benefits.map((benefit, index) => (
-              <motion.div
-                key={benefit.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-              >
-                <GlassCard className="text-center h-full">
-                  <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-teal-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <benefit.icon className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="text-xl font-semibold text-white mb-4">{benefit.title}</h3>
-                  <p className="text-gray-300">{benefit.description}</p>
-                </GlassCard>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Implementation Process */}
-      <section className="py-20 px-4 bg-gradient-to-r from-green-900/20 to-teal-900/20">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl font-bold text-white mb-6">
-              Implementation Process
-            </h2>
-            <p className="text-xl text-gray-300">
-              From upload to deployment in just 4 simple steps
+            <p className="text-lg text-gray-600 mb-12 max-w-2xl mx-auto">
+              Empower your classrooms with 24/7 personalized, voice-based AI tutors that know your syllabus.
             </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {implementation.map((step, index) => (
-              <motion.div
-                key={step.step}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.2 }}
+            
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full font-semibold text-lg shadow-2xl hover:shadow-3xl transition-all duration-300"
               >
-                <GlassCard className="text-center h-full">
-                  <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <step.icon className="w-8 h-8 text-white" />
-                  </div>
-                  <div className="text-sm text-blue-300 font-semibold mb-2">STEP {step.step}</div>
-                  <h3 className="text-xl font-semibold text-white mb-4">{step.title}</h3>
-                  <p className="text-gray-300">{step.description}</p>
-                </GlassCard>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* AI Tutor Demo */}
-      <section className="py-20 px-4">
-        <div className="max-w-4xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-4xl font-bold text-white mb-6">
-              Experience AI Tutoring
-            </h2>
-            <p className="text-xl text-gray-300">
-              Listen to how our AI tutors explain concepts and interact with students
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <VoicePlayer
-              title="Mathematics AI Tutor"
-              description="Hear how our AI explains complex math concepts"
-              audioSrc="/sounds/success.mp3"
-            />
-            <VoicePlayer
-              title="Science AI Tutor"
-              description="Experience interactive science explanations"
-              audioSrc="/sounds/hit.mp3"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Use Cases */}
-      <section className="py-20 px-4 bg-gradient-to-r from-blue-900/20 to-purple-900/20">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl font-bold text-white mb-6">
-              Perfect for Every Institution
-            </h2>
-            <p className="text-xl text-gray-300">
-              From K-12 schools to universities, our AI tutors adapt to any educational environment
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                title: 'K-12 Schools',
-                description: 'Support teachers with AI assistants that help students with homework and concept understanding',
-                features: ['Homework Help', 'Concept Explanation', 'Progress Tracking', 'Parent Reports']
-              },
-              {
-                title: 'Universities',
-                description: 'Provide 24/7 support for complex subjects and research guidance',
-                features: ['Research Assistance', 'Advanced Concepts', 'Thesis Support', 'Lab Guidance']
-              },
-              {
-                title: 'Training Centers',
-                description: 'Enhance professional development with specialized AI tutors',
-                features: ['Skill Development', 'Certification Prep', 'Career Guidance', 'Industry Updates']
-              }
-            ].map((useCase, index) => (
-              <motion.div
-                key={useCase.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.2 }}
+                <Upload className="mr-3 w-6 h-6" />
+                📥 Upload Your Curriculum
+              </motion.button>
+              
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setChatOpen(true)}
+                className="inline-flex items-center px-8 py-4 bg-white text-gray-800 rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl border-2 border-gray-200 hover:border-blue-300 transition-all duration-300"
               >
-                <GlassCard className="h-full">
-                  <h3 className="text-2xl font-semibold text-white mb-4">{useCase.title}</h3>
-                  <p className="text-gray-300 mb-6">{useCase.description}</p>
-                  <ul className="space-y-2">
-                    {useCase.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-center text-gray-300">
-                        <CheckCircle className="w-5 h-5 mr-3 text-green-400" />
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                </GlassCard>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl font-bold text-white mb-6">
-              What Educators Say
-            </h2>
-            <p className="text-xl text-gray-300">
-              Hear from institutions already using our AI tutors
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <motion.div
-                key={testimonial.name}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.2 }}
-              >
-                <GlassCard className="h-full">
-                  <div className="flex mb-4">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <span key={i} className="text-yellow-400">★</span>
-                    ))}
-                  </div>
-                  <p className="text-gray-300 mb-6 italic">"{testimonial.quote}"</p>
-                  <div className="border-t border-white/20 pt-4">
-                    <p className="text-white font-semibold">{testimonial.name}</p>
-                    <p className="text-gray-400 text-sm">{testimonial.role}</p>
-                  </div>
-                </GlassCard>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ROI Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-green-900/20 to-teal-900/20">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              <h2 className="text-4xl font-bold text-white mb-6">
-                Proven Results
-              </h2>
-              <p className="text-xl text-gray-300 mb-8">
-                Our AI tutors deliver measurable improvements in student outcomes
-              </p>
-              <ul className="space-y-4">
-                {[
-                  '40% improvement in student engagement',
-                  '60% reduction in teacher workload',
-                  '25% increase in test scores',
-                  '80% student satisfaction rate',
-                  '50% faster curriculum coverage'
-                ].map((stat, index) => (
-                  <li key={index} className="flex items-center text-gray-300">
-                    <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mr-3">
-                      <span className="text-white text-sm">✓</span>
-                    </div>
-                    {stat}
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              <div className="grid grid-cols-2 gap-6">
-                {[
-                  { metric: '10,000+', label: 'Students Helped' },
-                  { metric: '500+', label: 'Institutions' },
-                  { metric: '95%', label: 'Satisfaction Rate' },
-                  { metric: '24/7', label: 'Availability' }
-                ].map((stat, index) => (
-                  <GlassCard key={index} className="text-center">
-                    <div className="text-3xl font-bold text-white mb-2 neon-text">
-                      {stat.metric}
-                    </div>
-                    <div className="text-gray-300 text-sm">{stat.label}</div>
-                  </GlassCard>
-                ))}
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <h2 className="text-4xl font-bold text-white mb-6">
-              Ready to Transform Your Institution?
-            </h2>
-            <p className="text-xl text-gray-300 mb-8">
-              Join hundreds of educational institutions already using our AI tutors
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                to="/contact"
-                className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-green-500 to-teal-600 text-white rounded-full font-semibold hover:from-green-600 hover:to-teal-700 transition-all duration-200 shadow-lg"
-              >
-                Get Started Today
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Link>
-              <Link
-                to="/contact"
-                className="inline-flex items-center px-8 py-4 bg-transparent border-2 border-white text-white rounded-full font-semibold hover:bg-white hover:text-gray-900 transition-all duration-200"
-              >
-                Schedule Demo
-              </Link>
+                <Mic className="mr-3 w-6 h-6" />
+                🎤 Talk to Your First AI Tutor
+              </motion.button>
             </div>
           </motion.div>
         </div>
       </section>
+
+      {/* How It Works Section */}
+      <section className="py-20 px-6">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              How It Works
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              From curriculum upload to student interaction - see how easy it is to deploy AI tutors in your school.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {steps.map((step, index) => (
+              <AnimatedStep
+                key={index}
+                step={step.step}
+                title={step.title}
+                description={step.description}
+                icon={step.icon}
+                delay={index * 0.1}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Personalization Section */}
+      <section className="py-20 px-6 bg-gradient-to-r from-blue-50 to-purple-50">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Make It Your Own
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Customize every aspect of your AI tutors to match your school's unique identity and teaching style.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {personalizationFeatures.map((feature, index) => (
+              <PersonalizationCard
+                key={index}
+                title={feature.title}
+                description={feature.description}
+                icon={feature.icon}
+                color={feature.color}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Student Experience Simulation */}
+      <section className="py-20 px-6">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Experience the Future
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              See how students will interact with your AI tutors through voice and chat.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            {/* Voice Demo */}
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <GlassCard className="p-8">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-2xl font-bold text-gray-800">Voice Interaction</h3>
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => setActiveDemo('voice')}
+                    className={`p-3 rounded-full ${activeDemo === 'voice' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600'}`}
+                  >
+                    <Volume2 className="w-5 h-5" />
+                  </motion.button>
+                </div>
+                <VoicePlayer 
+                  title="Mrs. Nair - History Tutor"
+                  description="Ask me about the French Revolution or any topic from your curriculum."
+                  onPlayStateChange={setIsPlaying}
+                />
+              </GlassCard>
+            </motion.div>
+
+            {/* Chat Demo */}
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <GlassCard className="p-8">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-2xl font-bold text-gray-800">Chat Interaction</h3>
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={() => setActiveDemo('chat')}
+                    className={`p-3 rounded-full ${activeDemo === 'chat' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600'}`}
+                  >
+                    <MessageCircle className="w-5 h-5" />
+                  </motion.button>
+                </div>
+                <ChatBot />
+              </GlassCard>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Value Proposition Section */}
+      <section className="py-20 px-6 bg-gradient-to-r from-slate-50 to-blue-50">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Why Schools Choose Us
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Trusted by educational institutions worldwide for reliable, secure, and effective AI tutoring solutions.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {valuePropositions.map((value, index) => (
+              <ValueCard
+                key={index}
+                icon={value.icon}
+                title={value.title}
+                description={value.description}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Dashboard Preview */}
+      <section className="py-20 px-6">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              School Admin Dashboard
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Get complete visibility into student learning patterns and AI tutor performance.
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+          >
+            <GlassCard className="p-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="text-center">
+                  <TrendingUp className="w-12 h-12 text-blue-600 mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold text-gray-800 mb-2">Usage Analytics</h3>
+                  <p className="text-gray-600">Track student engagement and learning hours</p>
+                </div>
+                <div className="text-center">
+                  <Target className="w-12 h-12 text-green-600 mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold text-gray-800 mb-2">Most-Asked Topics</h3>
+                  <p className="text-gray-600">Identify areas where students need more help</p>
+                </div>
+                <div className="text-center">
+                  <BarChart3 className="w-12 h-12 text-purple-600 mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold text-gray-800 mb-2">Progress Heatmap</h3>
+                  <p className="text-gray-600">Visualize student performance across subjects</p>
+                </div>
+              </div>
+            </GlassCard>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Call to Action */}
+      <section className="py-20 px-6 bg-gradient-to-r from-blue-600 to-purple-600">
+        <div className="max-w-4xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              The Future of Teaching Is Here
+            </h2>
+            <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+              You Lead, AI Supports. Transform your school's learning experience today.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="inline-flex items-center px-8 py-4 bg-white text-gray-800 rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl transition-all duration-300"
+              >
+                <Rocket className="mr-3 w-6 h-6" />
+                🚀 Launch AI Tutor Demo
+              </motion.button>
+              
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="inline-flex items-center px-8 py-4 border-2 border-white text-white rounded-full font-semibold text-lg hover:bg-white hover:text-gray-800 transition-all duration-300"
+              >
+                <PhoneCall className="mr-3 w-6 h-6" />
+                📞 Book a Discovery Call
+              </motion.button>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Chat Demo Modal */}
+      {chatOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+          onClick={() => setChatOpen(false)}
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            className="bg-white rounded-2xl p-6 max-w-md w-full max-h-[80vh] overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xl font-semibold text-gray-800">AI Tutor Demo</h3>
+              <button
+                onClick={() => setChatOpen(false)}
+                className="p-2 hover:bg-gray-100 rounded-full"
+              >
+                ×
+              </button>
+            </div>
+            <ChatBot />
+          </motion.div>
+        </motion.div>
+      )}
     </div>
   );
-};
-
-export default AITutors;
+}

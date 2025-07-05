@@ -91,3 +91,4 @@ Changelog:
 - July 05, 2025. Complete redesign of Language Learning page with voice-first experience
 - July 05, 2025. Added immersive 3D VoiceBridgeAnimation with multilingual word morphing
 - July 05, 2025. Integrated floating chat bubbles, voice wave rings, and particle effects
+- July 05, 2025. Created comprehensive "AI for School" page with 3D AI orb, step-by-step workflow, personalization features, and interactive demos
