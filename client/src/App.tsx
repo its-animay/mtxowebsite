@@ -13,6 +13,11 @@ import Enterprise from './pages/Enterprise';
 import HowItWorks from './pages/HowItWorks';
 import About from './pages/About';
 import Contact from './pages/Contact';
+import Fintech from './pages/industries/Fintech';
+import Healthcare from './pages/industries/Healthcare';
+import RealEstate from './pages/industries/RealEstate';
+import Ecommerce from './pages/industries/Ecommerce';
+import EdTech from './pages/industries/EdTech';
 import "@fontsource/inter";
 
 const queryClient = new QueryClient({
@@ -41,6 +46,11 @@ function App() {
               <Route path="/how-it-works" element={<HowItWorks />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/industries/fintech" element={<Fintech />} />
+              <Route path="/industries/healthcare" element={<Healthcare />} />
+              <Route path="/industries/real-estate" element={<RealEstate />} />
+              <Route path="/industries/ecommerce" element={<Ecommerce />} />
+              <Route path="/industries/edtech" element={<EdTech />} />
             </Routes>
           </AnimatePresence>
           <Footer />

@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { 
@@ -515,37 +516,43 @@ export default function Enterprise() {
                 title: "Fintech",
                 description: "Credit card limits, EMI plans, fraud reporting, and auto-KYC voice onboarding",
                 icon: "💳",
-                color: "from-green-400 to-blue-500"
+                color: "from-green-400 to-blue-500",
+                link: "/industries/fintech"
               },
               {
                 title: "EdTech", 
                 description: "Voice tutors for MCQs, concept explanations, and conversational doubt resolution",
                 icon: "🎓",
-                color: "from-purple-400 to-pink-500"
+                color: "from-purple-400 to-pink-500",
+                link: "/industries/edtech"
               },
               {
                 title: "Healthcare",
                 description: "HIPAA-compliant appointment booking, symptom diagnosis, and lab report queries",
                 icon: "🏥",
-                color: "from-red-400 to-orange-500"
+                color: "from-red-400 to-orange-500",
+                link: "/industries/healthcare"
               },
               {
                 title: "Real Estate",
                 description: "Property walkthroughs, investment options, and voice-powered buyer interest capture",
                 icon: "🏡",
-                color: "from-yellow-400 to-green-500"
+                color: "from-yellow-400 to-green-500",
+                link: "/industries/real-estate"
               },
               {
                 title: "E-commerce",
                 description: "Voice order tracking, AI concierge for VIP shoppers, and intelligent recommendations",
                 icon: "🛒",
-                color: "from-cyan-400 to-blue-500"
+                color: "from-cyan-400 to-blue-500",
+                link: "/industries/ecommerce"
               },
               {
                 title: "Enterprise",
                 description: "CRM integration, voice-powered support, and business process automation",
                 icon: "🏢",
-                color: "from-indigo-400 to-purple-500"
+                color: "from-indigo-400 to-purple-500",
+                link: "#"
               }
             ].map((industry, index) => (
               <motion.div
@@ -556,19 +563,21 @@ export default function Enterprise() {
                 whileHover={{ scale: 1.05, y: -5 }}
                 className="group relative"
               >
-                <div className="relative p-6 bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-white/10 hover:border-white/20 transition-all duration-300">
-                  <div className={`absolute inset-0 bg-gradient-to-br ${industry.color} opacity-0 group-hover:opacity-10 rounded-2xl transition-opacity duration-300`} />
-                  
-                  <div className="relative z-10">
-                    <div className="text-4xl mb-4">{industry.icon}</div>
-                    <h3 className="text-xl font-bold text-white mb-3">{industry.title}</h3>
-                    <p className="text-blue-100 text-sm leading-relaxed">{industry.description}</p>
+                <Link to={industry.link} className="block h-full">
+                  <div className="relative p-6 bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-white/10 hover:border-white/20 transition-all duration-300 h-full">
+                    <div className={`absolute inset-0 bg-gradient-to-br ${industry.color} opacity-0 group-hover:opacity-10 rounded-2xl transition-opacity duration-300`} />
+                    
+                    <div className="relative z-10">
+                      <div className="text-4xl mb-4">{industry.icon}</div>
+                      <h3 className="text-xl font-bold text-white mb-3">{industry.title}</h3>
+                      <p className="text-blue-100 text-sm leading-relaxed">{industry.description}</p>
+                    </div>
+                    
+                    <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" />
+                    </div>
                   </div>
-                  
-                  <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" />
-                  </div>
-                </div>
+                </Link>
               </motion.div>
             ))}
           </div>
