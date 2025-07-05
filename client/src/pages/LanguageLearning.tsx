@@ -96,14 +96,20 @@ const FloatingChatBubbles = () => {
   );
 };
 
-const StepCard = ({ step, title, description, icon: Icon, delay = 0 }) => (
+const StepCard = ({ step, title, description, icon: Icon, delay = 0 }: {
+  step: number;
+  title: string;
+  description: string;
+  icon: any;
+  delay?: number;
+}) => (
   <motion.div
     initial={{ opacity: 0, y: 50 }}
     whileInView={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.6, delay }}
     className="relative"
   >
-    <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 border border-white/20 shadow-xl hover:shadow-2xl transition-all duration-300">
+    <div className="bg-white/90 backdrop-blur-xl rounded-2xl p-6 border border-gray-200 shadow-xl hover:shadow-2xl transition-all duration-300">
       <div className="flex items-center mb-4">
         <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mr-4">
           <Icon className="w-6 h-6 text-white" />
@@ -112,13 +118,19 @@ const StepCard = ({ step, title, description, icon: Icon, delay = 0 }) => (
           {step}
         </div>
       </div>
-      <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
-      <p className="text-gray-300">{description}</p>
+      <h3 className="text-xl font-bold text-gray-800 mb-2">{title}</h3>
+      <p className="text-gray-600">{description}</p>
     </div>
   </motion.div>
 );
 
-const UseCaseCard = ({ title, description, character, bgColor, icon: Icon }) => (
+const UseCaseCard = ({ title, description, character, bgColor, icon: Icon }: {
+  title: string;
+  description: string;
+  character: string;
+  bgColor: string;
+  icon: any;
+}) => (
   <motion.div
     initial={{ opacity: 0, scale: 0.9 }}
     whileInView={{ opacity: 1, scale: 1 }}
@@ -139,7 +151,11 @@ const UseCaseCard = ({ title, description, character, bgColor, icon: Icon }) => 
   </motion.div>
 );
 
-const TestimonialCard = ({ quote, author, accent }) => (
+const TestimonialCard = ({ quote, author, accent }: {
+  quote: string;
+  author: string;
+  accent?: boolean;
+}) => (
   <motion.div
     initial={{ opacity: 0, x: -50 }}
     whileInView={{ opacity: 1, x: 0 }}
