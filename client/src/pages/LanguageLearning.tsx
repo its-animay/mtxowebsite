@@ -1,326 +1,355 @@
-import React, { Suspense, useState } from 'react';
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Environment, PerspectiveCamera } from '@react-three/drei';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Volume2, Mic, Play, Star, Users, Clock, ArrowRight, MessageCircle } from 'lucide-react';
-import GlassCard from '../components/ui/GlassCard';
-import VoicePlayer from '../components/ui/VoicePlayer';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls, Environment, PerspectiveCamera } from '@react-three/drei';
+import { 
+  ArrowRight, 
+  MessageCircle, 
+  Users, 
+  Award, 
+  Play, 
+  Pause,
+  Volume2,
+  Mic,
+  Globe,
+  Star,
+  Heart,
+  Sparkles,
+  Ear,
+  RotateCcw,
+  BookOpen,
+  TrendingUp,
+  Headphones,
+  Zap
+} from 'lucide-react';
 import AnimatedPanda from '../components/3d/AnimatedPanda';
 import MagicalElements from '../components/3d/MagicalElements';
 import SoundWave from '../components/3d/SoundWave';
-import * as THREE from 'three';
+import VoicePlayer from '../components/ui/VoicePlayer';
+import GlassCard from '../components/ui/GlassCard';
 
-// 3D Animated Teaching Character
-const TeachingCharacter = () => {
-  const groupRef = React.useRef<THREE.Group>(null);
-  const [isAnimating, setIsAnimating] = useState(false);
-
-  React.useEffect(() => {
-    const interval = setInterval(() => {
-      if (groupRef.current) {
-        groupRef.current.rotation.y = Math.sin(Date.now() * 0.001) * 0.3;
-        groupRef.current.position.y = Math.sin(Date.now() * 0.002) * 0.2;
-      }
-    }, 16);
-
-    return () => clearInterval(interval);
-  }, []);
-
+const VoiceWaveBackground = () => {
   return (
-    <group ref={groupRef}>
-      {/* Panda/Robot Character Body */}
-      <mesh position={[0, 0, 0]}>
-        <sphereGeometry args={[1, 32, 32]} />
-        <meshPhysicalMaterial
-          color="#ffffff"
-          metalness={0.1}
-          roughness={0.3}
+    <div className="absolute inset-0 opacity-20">
+      {[...Array(15)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute rounded-full"
+          style={{
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+            width: `${20 + Math.random() * 60}px`,
+            height: `${20 + Math.random() * 60}px`,
+            background: `radial-gradient(circle, rgba(79, 172, 254, 0.3) 0%, rgba(0, 242, 254, 0.1) 100%)`,
+          }}
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.6, 0.3],
+          }}
+          transition={{
+            duration: 2 + Math.random() * 2,
+            repeat: Infinity,
+            delay: Math.random() * 2,
+          }}
         />
-      </mesh>
-
-      {/* Eyes */}
-      <mesh position={[-0.3, 0.3, 0.8]}>
-        <sphereGeometry args={[0.15, 16, 16]} />
-        <meshBasicMaterial color="#000000" />
-      </mesh>
-      <mesh position={[0.3, 0.3, 0.8]}>
-        <sphereGeometry args={[0.15, 16, 16]} />
-        <meshBasicMaterial color="#000000" />
-      </mesh>
-
-      {/* Ears */}
-      <mesh position={[-0.5, 0.8, 0]}>
-        <sphereGeometry args={[0.3, 16, 16]} />
-        <meshPhysicalMaterial color="#000000" />
-      </mesh>
-      <mesh position={[0.5, 0.8, 0]}>
-        <sphereGeometry args={[0.3, 16, 16]} />
-        <meshPhysicalMaterial color="#000000" />
-      </mesh>
-
-      {/* Nose */}
-      <mesh position={[0, 0, 0.9]}>
-        <sphereGeometry args={[0.1, 16, 16]} />
-        <meshBasicMaterial color="#000000" />
-      </mesh>
-
-      {/* Arms */}
-      <mesh position={[-1.2, -0.5, 0]} rotation={[0, 0, 0.3]}>
-        <capsuleGeometry args={[0.2, 0.8, 4, 8]} />
-        <meshPhysicalMaterial color="#ffffff" />
-      </mesh>
-      <mesh position={[1.2, -0.5, 0]} rotation={[0, 0, -0.3]}>
-        <capsuleGeometry args={[0.2, 0.8, 4, 8]} />
-        <meshPhysicalMaterial color="#ffffff" />
-      </mesh>
-
-      {/* Speech Bubble */}
-      <group position={[2, 1.5, 0]}>
-        <mesh>
-          <boxGeometry args={[1.5, 0.8, 0.1]} />
-          <meshPhysicalMaterial
-            color="#00ffff"
-            transparent
-            opacity={0.8}
-          />
-        </mesh>
-        <mesh position={[-0.5, -0.5, 0]}>
-          <coneGeometry args={[0.2, 0.3, 3]} />
-          <meshPhysicalMaterial
-            color="#00ffff"
-            transparent
-            opacity={0.8}
-          />
-        </mesh>
-      </group>
-
-      {/* Floating learning elements */}
-      {['A', 'B', 'C', '1', '2', '3'].map((char, index) => (
-        <mesh
-          key={char}
-          position={[
-            Math.cos((index / 6) * Math.PI * 2) * 3,
-            Math.sin((index / 6) * Math.PI * 2) * 3,
-            Math.sin(Date.now() * 0.001 + index) * 0.5
-          ]}
-        >
-          <boxGeometry args={[0.3, 0.3, 0.1]} />
-          <meshPhysicalMaterial
-            color={`hsl(${index * 60}, 70%, 60%)`}
-            transparent
-            opacity={0.9}
-          />
-        </mesh>
       ))}
-
-      {/* Microphone icon */}
-      <group position={[0, -2, 1]}>
-        <mesh>
-          <capsuleGeometry args={[0.15, 0.4, 4, 8]} />
-          <meshBasicMaterial color="#333333" />
-        </mesh>
-        <mesh position={[0, -0.3, 0]}>
-          <cylinderGeometry args={[0.1, 0.1, 0.3, 8]} />
-          <meshBasicMaterial color="#666666" />
-        </mesh>
-      </group>
-    </group>
+    </div>
   );
 };
 
-const LanguageLearning = () => {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState('english');
-
-  const languages = [
-    { code: 'english', name: 'English', flag: '🇺🇸', students: '50K+' },
-    { code: 'spanish', name: 'Spanish', flag: '🇪🇸', students: '35K+' },
-    { code: 'french', name: 'French', flag: '🇫🇷', students: '28K+' },
-    { code: 'german', name: 'German', flag: '🇩🇪', students: '22K+' },
-    { code: 'chinese', name: 'Chinese', flag: '🇨🇳', students: '18K+' },
-    { code: 'japanese', name: 'Japanese', flag: '🇯🇵', students: '15K+' }
+const FloatingChatBubbles = () => {
+  const bubbles = [
+    { text: "Hello!", color: "from-blue-400 to-purple-400" },
+    { text: "¡Hola!", color: "from-orange-400 to-red-400" },
+    { text: "你好!", color: "from-green-400 to-teal-400" },
+    { text: "Bonjour!", color: "from-pink-400 to-purple-400" },
+    { text: "Привет!", color: "from-cyan-400 to-blue-400" },
   ];
 
-  const features = [
+  return (
+    <div className="absolute inset-0 pointer-events-none">
+      {bubbles.map((bubble, index) => (
+        <motion.div
+          key={index}
+          className={`absolute px-4 py-2 rounded-2xl bg-gradient-to-r ${bubble.color} text-white text-sm font-medium shadow-lg`}
+          style={{
+            left: `${15 + (index * 15)}%`,
+            top: `${20 + Math.sin(index) * 20}%`,
+          }}
+          animate={{
+            y: [0, -20, 0],
+            rotate: [0, 5, -5, 0],
+            opacity: [0.7, 1, 0.7],
+          }}
+          transition={{
+            duration: 4 + index,
+            repeat: Infinity,
+            delay: index * 0.8,
+          }}
+        >
+          {bubble.text}
+        </motion.div>
+      ))}
+    </div>
+  );
+};
+
+const StepCard = ({ step, title, description, icon: Icon, delay = 0 }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 50 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.6, delay }}
+    className="relative"
+  >
+    <div className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 border border-white/20 shadow-xl hover:shadow-2xl transition-all duration-300">
+      <div className="flex items-center mb-4">
+        <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mr-4">
+          <Icon className="w-6 h-6 text-white" />
+        </div>
+        <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold">
+          {step}
+        </div>
+      </div>
+      <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
+      <p className="text-gray-300">{description}</p>
+    </div>
+  </motion.div>
+);
+
+const UseCaseCard = ({ title, description, character, bgColor, icon: Icon }) => (
+  <motion.div
+    initial={{ opacity: 0, scale: 0.9 }}
+    whileInView={{ opacity: 1, scale: 1 }}
+    transition={{ duration: 0.5 }}
+    whileHover={{ scale: 1.05 }}
+    className={`relative overflow-hidden rounded-2xl p-6 ${bgColor} shadow-xl`}
+  >
+    <div className="relative z-10">
+      <div className="flex items-center mb-4">
+        <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mr-4">
+          <Icon className="w-6 h-6 text-white" />
+        </div>
+        <span className="text-2xl">{character}</span>
+      </div>
+      <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
+      <p className="text-white/90">{description}</p>
+    </div>
+  </motion.div>
+);
+
+const TestimonialCard = ({ quote, author, accent }) => (
+  <motion.div
+    initial={{ opacity: 0, x: -50 }}
+    whileInView={{ opacity: 1, x: 0 }}
+    transition={{ duration: 0.6 }}
+    className="bg-white/10 backdrop-blur-xl rounded-2xl p-6 border border-white/20 shadow-xl"
+  >
+    <div className="flex items-start mb-4">
+      <div className="w-10 h-10 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center mr-4">
+        <Volume2 className="w-5 h-5 text-white" />
+      </div>
+      <div className="flex-1">
+        <p className="text-white italic mb-2">"{quote}"</p>
+        <p className="text-gray-300 font-medium">{author}</p>
+      </div>
+    </div>
+    <div className="flex items-center">
+      <div className="w-full h-2 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full opacity-50">
+        <div className="h-full bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full w-3/4 animate-pulse"></div>
+      </div>
+    </div>
+  </motion.div>
+);
+
+export default function LanguageLearning() {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentStep, setCurrentStep] = useState(0);
+
+  const steps = [
     {
-      icon: Volume2,
-      title: 'Interactive Voice Learning',
-      description: 'Kids learn through natural conversation with AI characters'
+      title: "Say Hello 👋",
+      description: "Start a conversation in your target language",
+      icon: MessageCircle
     },
     {
-      icon: Mic,
-      title: 'Pronunciation Practice',
-      description: 'Real-time feedback on pronunciation and speaking skills'
+      title: "AI Listens & Responds",
+      description: "Your AI tutor understands and speaks back naturally",
+      icon: Ear
     },
     {
-      icon: Play,
-      title: 'Gamified Lessons',
-      description: 'Fun games and activities that make learning engaging'
+      title: "Practice & Correct",
+      description: "Repeat, respond, and get instant feedback",
+      icon: RotateCcw
     },
     {
-      icon: Star,
-      title: 'Progress Tracking',
-      description: 'Monitor your child\'s learning journey and achievements'
+      title: "Track Progress",
+      description: "Monitor pronunciation, fluency, and vocabulary growth",
+      icon: TrendingUp
+    }
+  ];
+
+  const useCases = [
+    {
+      title: "Children Learning",
+      description: "Playful conversations with AI pandas and characters",
+      character: "🐼",
+      bgColor: "bg-gradient-to-br from-pink-500 to-purple-600",
+      icon: Heart
+    },
+    {
+      title: "Students Practicing",
+      description: "Exam prep with focused conversation practice",
+      character: "🎓",
+      bgColor: "bg-gradient-to-br from-blue-500 to-cyan-600",
+      icon: BookOpen
+    },
+    {
+      title: "Active Seniors",
+      description: "Keep your mind sharp with language games",
+      character: "🧓",
+      bgColor: "bg-gradient-to-br from-green-500 to-teal-600",
+      icon: Zap
+    },
+    {
+      title: "Family Learning",
+      description: "Track everyone's progress on one dashboard",
+      character: "👨‍👩‍👧",
+      bgColor: "bg-gradient-to-br from-orange-500 to-red-600",
+      icon: Users
+    }
+  ];
+
+  const testimonials = [
+    {
+      quote: "I learned 15 new words just by talking!",
+      author: "Sarah, Age 10"
+    },
+    {
+      quote: "Feels like a real teacher... but fun!",
+      author: "Mike, Student"
+    },
+    {
+      quote: "My child speaks more confidently now.",
+      author: "Emma, Parent"
     }
   ];
 
   return (
-    <div className="min-h-screen pt-16">
-      {/* Magical Hero Section for Kids */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-pink-200 via-purple-200 to-blue-200">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 relative overflow-hidden">
+      {/* Animated Background */}
+      <VoiceWaveBackground />
+      <FloatingChatBubbles />
+      
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center justify-center px-4">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-purple-600/20 to-pink-600/20" />
+        
+        {/* 3D Scene */}
         <div className="absolute inset-0 z-0">
           <Canvas>
-            <PerspectiveCamera makeDefault position={[0, 0, 10]} />
-            <Suspense fallback={null}>
-              <AnimatedPanda position={[0, -1, 0]} scale={1.2} isHovered={isPlaying} />
-              <MagicalElements count={15} spread={12} />
-              <SoundWave isPlaying={isPlaying} intensity={1.5} color="#ff69b4" />
-            </Suspense>
-            <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.1} />
+            <PerspectiveCamera makeDefault position={[0, 0, 5]} />
+            <OrbitControls enableZoom={false} enablePan={false} />
+            
+            <ambientLight intensity={0.4} />
+            <directionalLight position={[5, 5, 5]} intensity={1} />
+            
+            <group position={[2, 0, 0]}>
+              <AnimatedPanda scale={0.8} isHovered={false} />
+            </group>
+            
+            <group position={[-2, 1, 0]}>
+              <MagicalElements count={8} spread={3} />
+            </group>
+            
+            <group position={[0, -1, 0]}>
+              <SoundWave isPlaying={isPlaying} intensity={0.5} />
+            </group>
+            
             <Environment preset="sunset" />
           </Canvas>
         </div>
 
-        <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
-          {/* Glass backdrop container */}
-          <div 
-            className="bg-black/20 backdrop-blur-xl rounded-3xl p-8 border border-white/20 shadow-2xl"
-            style={{
-              backdropFilter: "blur(14px)",
-              background: "rgba(255, 255, 255, 0.1)"
-            }}
+        {/* Hero Content */}
+        <div className="relative z-10 text-center max-w-4xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+            className="bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20 shadow-2xl"
           >
             <motion.h1
-              initial={{ opacity: 0, scale: 0.8, filter: "blur(10px)" }}
-              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-              transition={{ 
-                duration: 1.2, 
-                ease: "easeOut",
-                delay: 0.5
-              }}
-              className="text-5xl md:text-6xl font-bold mb-6"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="text-5xl md:text-7xl font-bold mb-6"
               style={{
-                fontFamily: "'Comic Neue', 'Baloo 2', 'Poppins', cursive",
-                color: "#2d3748",
-                textShadow: "0 0 15px rgba(255, 255, 255, 0.8), 0 0 30px rgba(255, 255, 255, 0.4)"
+                fontFamily: "'Poppins', 'Nunito', sans-serif",
+                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
               }}
             >
-              🎈 Voice Learning for Kids 🌟
+              Speak. Learn. Grow.
             </motion.h1>
             
             <motion.p
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ 
-                duration: 1.0, 
-                ease: "easeOut",
-                delay: 0.8
-              }}
-              className="text-xl mb-8"
-              style={{
-                fontFamily: "'Baloo 2', 'Comic Neue', cursive",
-                color: "#4a5568",
-                textShadow: "0 0 8px rgba(255, 255, 255, 0.3)"
-              }}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="text-2xl md:text-3xl font-semibold text-white mb-4"
+              style={{ fontFamily: "'Poppins', sans-serif" }}
             >
-              🐼 Meet your friendly AI panda teacher! Learn languages through fun conversations, songs, and magical stories! ✨
+              Voice-Based Language Learning Powered by AI
             </motion.p>
-
+            
+            <motion.p
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="text-lg text-gray-200 mb-8 max-w-2xl mx-auto"
+            >
+              Practice real conversations, get corrections, and build fluency — all through interactive voice with your personal AI tutor.
+            </motion.p>
+            
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ 
-                duration: 1.0, 
-                ease: "backOut",
-                delay: 1.1
-              }}
+              transition={{ duration: 0.8, delay: 0.8 }}
             >
               <motion.div
-                whileHover={{ 
-                  scale: 1.1,
-                  rotate: [0, -2, 2, 0],
-                  boxShadow: "0 0 25px rgba(255, 105, 180, 0.6)"
-                }}
-                whileTap={{ scale: 0.9 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 animate={{
-                  y: [0, -5, 0],
                   boxShadow: [
-                    "0 5px 15px rgba(255, 105, 180, 0.4)",
-                    "0 10px 25px rgba(255, 105, 180, 0.6)",
-                    "0 5px 15px rgba(255, 105, 180, 0.4)"
+                    "0 0 20px rgba(79, 172, 254, 0.5)",
+                    "0 0 30px rgba(79, 172, 254, 0.8)",
+                    "0 0 20px rgba(79, 172, 254, 0.5)"
                   ]
                 }}
                 transition={{
-                  y: { duration: 2, repeat: Infinity, ease: "easeInOut" },
-                  boxShadow: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+                  boxShadow: { duration: 2, repeat: Infinity }
                 }}
-                className="inline-block"
               >
                 <Link
                   to="/contact"
-                  className="inline-flex items-center px-8 py-4 text-white rounded-full font-bold text-lg transition-all duration-300 shadow-2xl"
-                  style={{
-                    fontFamily: "'Baloo 2', 'Comic Neue', cursive",
-                    background: "linear-gradient(45deg, #ff69b4, #ff1493, #ff6347)",
-                    border: "3px solid rgba(255, 255, 255, 0.3)"
-                  }}
+                  className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full font-bold text-lg shadow-2xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300"
+                  style={{ fontFamily: "'Poppins', sans-serif" }}
+                  onClick={() => setIsPlaying(!isPlaying)}
                 >
-                  🎤 Try Voice Chat! 🌟
-                  <ArrowRight className="ml-2 w-6 h-6" />
+                  <Mic className="mr-3 w-6 h-6" />
+                  🎤 Try a Voice Demo
+                  <ArrowRight className="ml-3 w-6 h-6" />
                 </Link>
               </motion.div>
             </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Language Selection */}
-      <section className="py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl font-bold text-white mb-6">
-              Choose Your Language Adventure
-            </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Our AI characters speak multiple languages and adapt to your child's learning pace
-            </p>
           </motion.div>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {languages.map((language, index) => (
-              <motion.div
-                key={language.code}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                whileHover={{ scale: 1.05 }}
-              >
-                <button
-                  onClick={() => setSelectedLanguage(language.code)}
-                  className={`w-full glass-card p-6 rounded-2xl text-center transition-all duration-300 ${
-                    selectedLanguage === language.code
-                      ? 'ring-2 ring-purple-500 bg-purple-500/20'
-                      : 'hover:bg-white/20'
-                  }`}
-                >
-                  <div className="text-4xl mb-3">{language.flag}</div>
-                  <h3 className="text-white font-semibold mb-2">{language.name}</h3>
-                  <p className="text-gray-300 text-sm">{language.students}</p>
-                </button>
-              </motion.div>
-            ))}
-          </div>
         </div>
       </section>
 
-      {/* Features */}
-      <section className="py-20 px-4 bg-gradient-to-r from-purple-900/20 to-pink-900/20">
+      {/* How It Works - Voice-First Flow */}
+      <section className="py-20 px-4 relative">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -328,71 +357,90 @@ const LanguageLearning = () => {
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-white mb-6">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
               How Voice Learning Works
             </h2>
-            <p className="text-xl text-gray-300">
-              Advanced AI technology designed specifically for children's learning needs
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Experience the most natural way to learn languages through conversation
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, index) => (
-              <motion.div
-                key={feature.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-              >
-                <GlassCard className="text-center h-full">
-                  <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <feature.icon className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="text-xl font-semibold text-white mb-4">{feature.title}</h3>
-                  <p className="text-gray-300">{feature.description}</p>
-                </GlassCard>
-              </motion.div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {steps.map((step, index) => (
+              <StepCard
+                key={index}
+                step={index + 1}
+                title={step.title}
+                description={step.description}
+                icon={step.icon}
+                delay={index * 0.2}
+              />
             ))}
           </div>
         </div>
       </section>
 
-      {/* Voice Demo Section */}
-      <section className="py-20 px-4">
-        <div className="max-w-4xl mx-auto">
+      {/* Personal AI Language Tutor */}
+      <section className="py-20 px-4 bg-gradient-to-r from-indigo-600 to-purple-600 relative">
+        <div className="max-w-7xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-center mb-12"
           >
-            <h2 className="text-4xl font-bold text-white mb-6">
-              Listen to Our AI Characters
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-8">
+              Your Personal AI Language Tutor
             </h2>
-            <p className="text-xl text-gray-300">
-              Experience how our AI characters interact with children in a natural, engaging way
+            <p className="text-xl text-white/90 mb-12 max-w-3xl mx-auto">
+              Intelligent feedback, memory of your progress, and voice adaptation — like having a real tutor who never gets tired
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <VoicePlayer
-              title="Panda Teacher - English"
-              description="Meet Panda, teaching basic English vocabulary"
-              audioSrc="/sounds/success.mp3"
-              onPlayStateChange={setIsPlaying}
-            />
-            <VoicePlayer
-              title="Robot Buddy - Spanish"
-              description="Robot Buddy helps with Spanish pronunciation"
-              audioSrc="/sounds/hit.mp3"
-              onPlayStateChange={setIsPlaying}
-            />
+          <div className="grid md:grid-cols-3 gap-8">
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="bg-white/10 backdrop-blur-xl rounded-2xl p-8 border border-white/20"
+            >
+              <div className="w-16 h-16 bg-yellow-400 rounded-full flex items-center justify-center mb-6 mx-auto">
+                <Zap className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-4">Smart Feedback</h3>
+              <p className="text-white/90">"You're struggling with R sounds. Let's practice rolling your Rs together!"</p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="bg-white/10 backdrop-blur-xl rounded-2xl p-8 border border-white/20"
+            >
+              <div className="w-16 h-16 bg-green-400 rounded-full flex items-center justify-center mb-6 mx-auto">
+                <TrendingUp className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-4">Memory of Progress</h3>
+              <p className="text-white/90">Your AI tutor remembers every lesson and adapts to your learning style</p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="bg-white/10 backdrop-blur-xl rounded-2xl p-8 border border-white/20"
+            >
+              <div className="w-16 h-16 bg-blue-400 rounded-full flex items-center justify-center mb-6 mx-auto">
+                <Volume2 className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-4">Voice Adaptation</h3>
+              <p className="text-white/90">Matches your pace, accent, and learning preferences automatically</p>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Age Groups */}
-      <section className="py-20 px-4 bg-gradient-to-r from-blue-900/20 to-purple-900/20">
+      {/* Use Cases */}
+      <section className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -400,189 +448,94 @@ const LanguageLearning = () => {
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-white mb-6">
-              Perfect for Every Age
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
+              Perfect for Everyone
             </h2>
-            <p className="text-xl text-gray-300">
-              Age-appropriate content and characters designed for different learning stages
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              From children to seniors, our voice-first approach makes language learning accessible and fun
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                age: '3-5 Years',
-                title: 'Early Learners',
-                description: 'Simple words, songs, and playful interactions',
-                character: '🐼',
-                features: ['Basic Vocabulary', 'Color Recognition', 'Simple Phrases']
-              },
-              {
-                age: '6-8 Years',
-                title: 'Young Explorers',
-                description: 'Story-based learning with interactive conversations',
-                character: '🤖',
-                features: ['Sentence Building', 'Grammar Basics', 'Story Reading']
-              },
-              {
-                age: '9-12 Years',
-                title: 'Advanced Learners',
-                description: 'Complex conversations and cultural learning',
-                character: '🦊',
-                features: ['Fluent Conversations', 'Cultural Context', 'Advanced Grammar']
-              }
-            ].map((group, index) => (
-              <motion.div
-                key={group.age}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.2 }}
-              >
-                <GlassCard className="text-center h-full">
-                  <div className="text-6xl mb-4">{group.character}</div>
-                  <span className="inline-block px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm mb-2">
-                    {group.age}
-                  </span>
-                  <h3 className="text-xl font-semibold text-white mb-3">{group.title}</h3>
-                  <p className="text-gray-300 mb-4">{group.description}</p>
-                  <ul className="text-left space-y-2">
-                    {group.features.map((feature, idx) => (
-                      <li key={idx} className="text-sm text-gray-300 flex items-center">
-                        <span className="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                </GlassCard>
-              </motion.div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {useCases.map((useCase, index) => (
+              <UseCaseCard
+                key={index}
+                title={useCase.title}
+                description={useCase.description}
+                character={useCase.character}
+                bgColor={useCase.bgColor}
+                icon={useCase.icon}
+              />
             ))}
           </div>
         </div>
       </section>
 
-      {/* Parent Dashboard */}
-      <section className="py-20 px-4">
+      {/* Testimonials */}
+      <section className="py-20 px-4 bg-gradient-to-r from-purple-600 to-pink-600">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              <h2 className="text-4xl font-bold text-white mb-6">
-                Parent Dashboard
-              </h2>
-              <p className="text-xl text-gray-300 mb-8">
-                Monitor your child's progress with detailed insights and recommendations
-              </p>
-              <ul className="space-y-4">
-                {[
-                  'Real-time learning progress tracking',
-                  'Vocabulary and pronunciation assessments',
-                  'Weekly progress reports and achievements',
-                  'Personalized learning recommendations',
-                  'Safe, child-friendly environment'
-                ].map((feature, index) => (
-                  <li key={index} className="flex items-center text-gray-300">
-                    <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mr-3">
-                      <span className="text-white text-sm">✓</span>
-                    </div>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              Real Voices, Real Results
+            </h2>
+            <p className="text-xl text-white/90 max-w-3xl mx-auto">
+              Hear what our learners are saying about their voice-first experience
+            </p>
+          </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              <GlassCard>
-                <div className="space-y-6">
-                  <div className="text-center">
-                    <h3 className="text-xl font-semibold text-white mb-2">Emma's Progress</h3>
-                    <p className="text-gray-300">Learning Spanish for 3 weeks</p>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <div>
-                      <div className="flex justify-between text-sm text-gray-300 mb-1">
-                        <span>Vocabulary</span>
-                        <span>85%</span>
-                      </div>
-                      <div className="w-full bg-gray-700 rounded-full h-2">
-                        <div className="bg-green-500 h-2 rounded-full" style={{ width: '85%' }}></div>
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <div className="flex justify-between text-sm text-gray-300 mb-1">
-                        <span>Pronunciation</span>
-                        <span>72%</span>
-                      </div>
-                      <div className="w-full bg-gray-700 rounded-full h-2">
-                        <div className="bg-blue-500 h-2 rounded-full" style={{ width: '72%' }}></div>
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <div className="flex justify-between text-sm text-gray-300 mb-1">
-                        <span>Conversation</span>
-                        <span>68%</span>
-                      </div>
-                      <div className="w-full bg-gray-700 rounded-full h-2">
-                        <div className="bg-purple-500 h-2 rounded-full" style={{ width: '68%' }}></div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="text-center">
-                    <span className="text-2xl">🏆</span>
-                    <p className="text-white font-semibold">5 Achievements Unlocked!</p>
-                  </div>
-                </div>
-              </GlassCard>
-            </motion.div>
+          <div className="grid md:grid-cols-3 gap-8">
+            {testimonials.map((testimonial, index) => (
+              <TestimonialCard
+                key={index}
+                quote={testimonial.quote}
+                author={testimonial.author}
+                accent={index % 2 === 0}
+              />
+            ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 px-4">
+      {/* Call-to-Action Footer */}
+      <section className="py-20 px-4 bg-gradient-to-br from-gray-900 to-gray-800">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h2 className="text-4xl font-bold text-white mb-6">
-              Start Your Child's Language Adventure
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              No Keyboard. No Typing.
             </h2>
-            <p className="text-xl text-gray-300 mb-8">
-              Join thousands of families who trust our AI characters to teach their children
+            <h3 className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 mb-8">
+              Just Talk and Learn.
+            </h3>
+            <p className="text-xl text-gray-300 mb-12 max-w-2xl mx-auto">
+              The most natural way to learn languages is through conversation. Start speaking a new language today.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
               <Link
                 to="/contact"
-                className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-full font-semibold hover:from-purple-600 hover:to-pink-700 transition-all duration-200 shadow-lg"
+                className="inline-flex items-center px-12 py-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full font-bold text-xl shadow-2xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300"
+                style={{ fontFamily: "'Poppins', sans-serif" }}
               >
-                Try Free Demo
-                <ArrowRight className="ml-2 w-5 h-5" />
+                <Headphones className="mr-4 w-8 h-8" />
+                Start Talking in a New Language
+                <ArrowRight className="ml-4 w-8 h-8" />
               </Link>
-              <Link
-                to="/contact"
-                className="inline-flex items-center px-8 py-4 bg-transparent border-2 border-white text-white rounded-full font-semibold hover:bg-white hover:text-gray-900 transition-all duration-200"
-              >
-                Schedule Call
-                <MessageCircle className="ml-2 w-5 h-5" />
-              </Link>
-            </div>
+            </motion.div>
           </motion.div>
         </div>
       </section>
     </div>
   );
-};
-
-export default LanguageLearning;
+}
