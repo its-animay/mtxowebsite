@@ -89,14 +89,14 @@ const VoiceBridgeAnimation: React.FC<VoiceBridgeAnimationProps> = ({
     });
 
     return (
-      <group ref={ringsRef}>
-        {[...Array(5)].map((_, i) => (
-          <mesh key={i} position={[0, 0, -i * 0.5]}>
-            <ringGeometry args={[1 + i * 0.3, 1.2 + i * 0.3, 32]} />
+      <group ref={ringsRef} position={[0, 0, -1]}>
+        {[...Array(3)].map((_, i) => (
+          <mesh key={i} position={[0, 0, -i * 0.2]}>
+            <ringGeometry args={[0.5 + i * 0.2, 0.7 + i * 0.2, 32]} />
             <meshBasicMaterial 
               color={words[currentWordIndex]?.color || "#667eea"} 
               transparent 
-              opacity={0.2}
+              opacity={0.15}
             />
           </mesh>
         ))}
@@ -168,12 +168,12 @@ const VoiceBridgeAnimation: React.FC<VoiceBridgeAnimationProps> = ({
     });
 
     return (
-      <mesh ref={bubbleRef} position={[0, 0, -0.5]}>
-        <sphereGeometry args={[2, 32, 32]} />
+      <mesh ref={bubbleRef} position={[0, 0, -3]}>
+        <sphereGeometry args={[1.5, 32, 32]} />
         <meshStandardMaterial
           color="white"
           transparent
-          opacity={0.1}
+          opacity={0.08}
           roughness={0.1}
           metalness={0.1}
         />
@@ -194,11 +194,12 @@ const VoiceBridgeAnimation: React.FC<VoiceBridgeAnimationProps> = ({
           <Text
             ref={textRef}
             position={[0, 0, 0]}
-            fontSize={2}
+            fontSize={0.8}
             color={words[currentWordIndex]?.color || "#667eea"}
             anchorX="center"
             anchorY="middle"
             fontWeight="bold"
+            maxWidth={4}
           >
             {words[currentWordIndex]?.text || "Hello"}
           </Text>
@@ -210,12 +211,13 @@ const VoiceBridgeAnimation: React.FC<VoiceBridgeAnimationProps> = ({
         <group>
           <Float speed={0.5} rotationIntensity={0.05} floatIntensity={0.2}>
             <Text
-              position={[0, 1, 0]}
-              fontSize={1.2}
+              position={[0, 0.5, 0]}
+              fontSize={0.6}
               color="#667eea"
               anchorX="center"
               anchorY="middle"
               fontWeight="bold"
+              maxWidth={6}
             >
               Speak. Learn. Grow.
             </Text>
@@ -223,11 +225,12 @@ const VoiceBridgeAnimation: React.FC<VoiceBridgeAnimationProps> = ({
           
           <Float speed={0.3} rotationIntensity={0.03} floatIntensity={0.1}>
             <Text
-              position={[0, 0, 0]}
-              fontSize={0.6}
+              position={[0, -0.2, 0]}
+              fontSize={0.3}
               color="#764ba2"
               anchorX="center"
               anchorY="middle"
+              maxWidth={8}
             >
               Voice-Based Language Learning Powered by AI
             </Text>
