@@ -1,550 +1,511 @@
-import React, { Suspense } from 'react';
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Environment, PerspectiveCamera } from '@react-three/drei';
-import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { Building, Users, Headphones, TrendingUp, Shield, Clock, ArrowRight, CheckCircle } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { 
+  Sphere, 
+  Box, 
+  Torus, 
+  Text, 
+  Float, 
+  OrbitControls, 
+  Environment,
+  MeshDistortMaterial,
+  Plane
+} from '@react-three/drei';
+import * as THREE from 'three';
+import { 
+  Mic, 
+  Phone, 
+  BarChart3, 
+  Users, 
+  TrendingUp, 
+  MessageSquare,
+  Zap,
+  Shield,
+  Clock,
+  Target,
+  Headphones,
+  Bot,
+  PlayCircle,
+  Calendar,
+  ArrowRight,
+  CheckCircle,
+  Star,
+  Globe
+} from 'lucide-react';
 import GlassCard from '../components/ui/GlassCard';
-import VoicePlayer from '../components/ui/VoicePlayer';
-import CallCenterCube from '../components/3d/CallCenterCube';
 
-const Enterprise = () => {
-  const solutions = [
+// 3D Holographic AI Assistant Component
+const HolographicAssistant = ({ intensity = 1 }: { intensity?: number }) => {
+  const meshRef = useRef<THREE.Mesh>(null);
+  const ringRef = useRef<THREE.Group>(null);
+  
+  useFrame((state) => {
+    if (meshRef.current) {
+      meshRef.current.rotation.y = state.clock.elapsedTime * 0.3;
+    }
+    if (ringRef.current) {
+      ringRef.current.rotation.z = state.clock.elapsedTime * 0.2;
+    }
+  });
+
+  return (
+    <Float speed={2} rotationIntensity={0.4} floatIntensity={0.8}>
+      <group>
+        {/* Main AI Core */}
+        <Sphere ref={meshRef} args={[1.5, 64, 64]} position={[0, 0, 0]}>
+          <MeshDistortMaterial 
+            color="#00d4ff" 
+            transparent 
+            opacity={0.6}
+            distort={0.3}
+            speed={2}
+            roughness={0.1}
+            metalness={0.9}
+          />
+        </Sphere>
+        
+        {/* Inner Energy Core */}
+        <Sphere args={[1, 32, 32]} position={[0, 0, 0]}>
+          <meshStandardMaterial 
+            color="#4f46e5" 
+            transparent 
+            opacity={0.4}
+            emissive="#4f46e5"
+            emissiveIntensity={intensity * 0.6}
+          />
+        </Sphere>
+        
+        {/* Rotating Rings */}
+        <group ref={ringRef}>
+          <Torus args={[2.5, 0.1, 16, 32]} position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
+            <meshStandardMaterial 
+              color="#00ff88" 
+              transparent 
+              opacity={0.7}
+              emissive="#00ff88"
+              emissiveIntensity={0.3}
+            />
+          </Torus>
+          <Torus args={[3, 0.08, 16, 32]} position={[0, 0, 0]} rotation={[0, Math.PI / 3, 0]}>
+            <meshStandardMaterial 
+              color="#ff6b6b" 
+              transparent 
+              opacity={0.5}
+              emissive="#ff6b6b"
+              emissiveIntensity={0.2}
+            />
+          </Torus>
+        </group>
+        
+        {/* Voice Wave Visualizers */}
+        {[...Array(8)].map((_, i) => (
+          <Float key={i} speed={1.5 + i * 0.2} rotationIntensity={0.1}>
+            <Box 
+              args={[0.2, 0.8 + Math.sin(i) * 0.5, 0.2]} 
+              position={[
+                Math.sin(i * Math.PI / 4) * 4,
+                Math.cos(i * Math.PI / 4) * 0.5,
+                Math.sin(i * Math.PI / 6) * 2
+              ]}
+            >
+              <meshStandardMaterial 
+                color="#a78bfa" 
+                transparent 
+                opacity={0.8}
+                emissive="#a78bfa"
+                emissiveIntensity={0.3}
+              />
+            </Box>
+          </Float>
+        ))}
+        
+        {/* Data Particles */}
+        {[...Array(12)].map((_, i) => (
+          <Float key={`particle-${i}`} speed={0.8 + i * 0.1} rotationIntensity={0.2}>
+            <Sphere 
+              args={[0.1, 8, 8]} 
+              position={[
+                Math.sin(i * Math.PI / 6) * 5,
+                Math.cos(i * Math.PI / 6) * 3,
+                Math.sin(i * Math.PI / 4) * 3
+              ]}
+            >
+              <meshStandardMaterial 
+                color="#fbbf24" 
+                transparent 
+                opacity={0.6}
+                emissive="#fbbf24"
+                emissiveIntensity={0.4}
+              />
+            </Sphere>
+          </Float>
+        ))}
+        
+        {/* Enterprise Text */}
+        <Text
+          position={[0, -4, 0]}
+          fontSize={0.8}
+          color="#1f2937"
+          anchorX="center"
+          anchorY="middle"
+        >
+          Enterprise AI
+        </Text>
+      </group>
+    </Float>
+  );
+};
+
+// Animated Feature Card Component
+const FeatureCard = ({ icon: Icon, title, description, delay = 0 }: {
+  icon: any;
+  title: string;
+  description: string;
+  delay?: number;
+}) => (
+  <motion.div
+    initial={{ opacity: 0, y: 50 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.6, delay }}
+    whileHover={{ scale: 1.05 }}
+  >
+    <GlassCard className="p-6 text-center h-full">
+      <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+        <Icon className="w-8 h-8 text-white" />
+      </div>
+      <h3 className="text-xl font-bold text-gray-800 mb-3">{title}</h3>
+      <p className="text-gray-600 leading-relaxed">{description}</p>
+    </GlassCard>
+  </motion.div>
+);
+
+// Stats Component
+const StatCard = ({ value, label, delay = 0 }: {
+  value: string;
+  label: string;
+  delay?: number;
+}) => (
+  <motion.div
+    initial={{ opacity: 0, scale: 0.8 }}
+    whileInView={{ opacity: 1, scale: 1 }}
+    transition={{ duration: 0.6, delay }}
+    className="text-center"
+  >
+    <div className="text-4xl md:text-5xl font-bold text-white mb-2">{value}</div>
+    <div className="text-blue-100 text-lg">{label}</div>
+  </motion.div>
+);
+
+export default function Enterprise() {
+  const [activeDemo, setActiveDemo] = useState<'voice' | 'chat' | null>(null);
+  const { scrollYProgress } = useScroll();
+  const y = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
+
+  const features = [
     {
       icon: Headphones,
-      title: 'AI Customer Support',
-      description: 'Intelligent voice and chat agents that understand your business context',
-      features: ['24/7 availability', 'Multi-language support', 'Contextual responses', 'Escalation protocols']
+      title: "24/7 Voice Support",
+      description: "Intelligent AI agents handle customer inquiries round-the-clock with natural conversation flows."
     },
     {
-      icon: Users,
-      title: 'Employee Training',
-      description: 'AI-powered onboarding and continuous learning systems',
-      features: ['Personalized training', 'Interactive scenarios', 'Progress tracking', 'Skills assessment']
+      icon: Bot,
+      title: "Sales Automation",
+      description: "Autonomous agents qualify leads, schedule meetings, and guide prospects through your sales funnel."
     },
     {
-      icon: Building,
-      title: 'Internal Knowledge Base',
-      description: 'Voice-activated access to company information and procedures',
-      features: ['Natural language queries', 'Document search', 'Policy explanations', 'Instant updates']
+      icon: BarChart3,
+      title: "Real-time Analytics",
+      description: "Track conversation metrics, sentiment analysis, and performance insights in real-time dashboards."
     },
     {
-      icon: TrendingUp,
-      title: 'Sales Assistance',
-      description: 'AI agents that support sales teams with product knowledge',
-      features: ['Product recommendations', 'Price calculations', 'Competitive analysis', 'Lead qualification']
-    }
-  ];
-
-  const industries = [
-    {
-      name: 'Healthcare',
-      icon: '🏥',
-      description: 'Patient support, appointment scheduling, and medical information assistance',
-      useCases: ['Patient inquiries', 'Appointment booking', 'Medication reminders', 'Insurance support']
+      icon: Shield,
+      title: "Enterprise Security",
+      description: "Bank-level encryption, compliance-ready infrastructure, and secure data handling protocols."
     },
     {
-      name: 'Finance',
-      icon: '🏦',
-      description: 'Financial advisory, account management, and fraud detection support',
-      useCases: ['Account inquiries', 'Transaction support', 'Investment guidance', 'Fraud alerts']
+      icon: Zap,
+      title: "Instant Deployment",
+      description: "Deploy AI agents in minutes with pre-built templates and seamless integrations."
     },
     {
-      name: 'Retail',
-      icon: '🛍️',
-      description: 'Product recommendations, order tracking, and customer service automation',
-      useCases: ['Product search', 'Order status', 'Returns processing', 'Size recommendations']
-    },
-    {
-      name: 'Manufacturing',
-      icon: '🏭',
-      description: 'Equipment monitoring, maintenance scheduling, and quality control',
-      useCases: ['Equipment status', 'Maintenance alerts', 'Quality reports', 'Safety protocols']
-    },
-    {
-      name: 'Technology',
-      icon: '💻',
-      description: 'Technical support, documentation access, and developer assistance',
-      useCases: ['Bug reports', 'Code reviews', 'API documentation', 'System monitoring']
-    },
-    {
-      name: 'Education',
-      icon: '🎓',
-      description: 'Student support, administrative tasks, and academic guidance',
-      useCases: ['Course information', 'Registration help', 'Academic advising', 'Campus services']
-    }
-  ];
-
-  const benefits = [
-    {
-      metric: '70%',
-      label: 'Reduction in support costs',
-      description: 'Automated responses handle routine inquiries'
-    },
-    {
-      metric: '24/7',
-      label: 'Continuous availability',
-      description: 'AI agents work around the clock'
-    },
-    {
-      metric: '40%',
-      label: 'Faster response times',
-      description: 'Instant responses to customer queries'
-    },
-    {
-      metric: '95%',
-      label: 'Accuracy rate',
-      description: 'High-quality responses with context understanding'
-    }
-  ];
-
-  const testimonials = [
-    {
-      company: 'TechCorp Inc.',
-      industry: 'Technology',
-      quote: 'Our AI agents handle 80% of customer inquiries, freeing our team for complex issues.',
-      name: 'Sarah Johnson',
-      role: 'VP of Customer Success',
-      logo: '🔧'
-    },
-    {
-      company: 'HealthPlus',
-      industry: 'Healthcare',
-      quote: 'Patient satisfaction improved by 45% since implementing voice-enabled appointment booking.',
-      name: 'Dr. Michael Chen',
-      role: 'Chief Medical Officer',
-      logo: '⚕️'
-    },
-    {
-      company: 'GlobalBank',
-      industry: 'Finance',
-      quote: 'Our AI handles complex financial queries with accuracy that rivals human agents.',
-      name: 'Emma Rodriguez',
-      role: 'Director of Digital Services',
-      logo: '💰'
+      icon: Globe,
+      title: "Multi-language Support",
+      description: "Serve global customers with AI agents fluent in 40+ languages and cultural contexts."
     }
   ];
 
   return (
-    <div className="min-h-screen pt-16">
-      {/* Hero Section with 3D Call Center */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-purple-900">
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+        {/* Animated Background Elements */}
+        <motion.div 
+          className="absolute inset-0 z-0"
+          style={{ y }}
+        >
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-900/50 via-purple-900/30 to-slate-900/50" />
+          
+          {/* Floating Particles */}
+          {[...Array(20)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-2 h-2 bg-blue-400 rounded-full opacity-20"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+              }}
+              animate={{
+                y: [0, -30, 0],
+                opacity: [0.2, 0.8, 0.2],
+              }}
+              transition={{
+                duration: 3 + Math.random() * 2,
+                repeat: Infinity,
+                delay: Math.random() * 2,
+              }}
+            />
+          ))}
+        </motion.div>
+
+        {/* Background 3D Scene */}
         <div className="absolute inset-0 z-0">
-          <Canvas>
-            <PerspectiveCamera makeDefault position={[0, 2, 12]} />
-            <ambientLight intensity={0.5} />
-            <directionalLight position={[10, 10, 5]} intensity={1} />
-            <Suspense fallback={null}>
-              <CallCenterCube />
-            </Suspense>
+          <Canvas camera={{ position: [0, 0, 10], fov: 50 }}>
+            <ambientLight intensity={0.4} />
+            <directionalLight position={[10, 10, 5]} intensity={1.5} />
+            <pointLight position={[-10, -10, -5]} intensity={0.8} color="#00d4ff" />
+            <HolographicAssistant intensity={1} />
             <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.3} />
             <Environment preset="city" />
           </Canvas>
         </div>
 
-        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-5xl md:text-6xl font-bold text-white mb-6 neon-text"
-          >
-            Enterprise AI Agents
-          </motion.h1>
-          
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-xl text-gray-300 mb-8"
-          >
-            Voice and chat AI agents that understand your business and serve your customers
-          </motion.p>
-
+        {/* Hero Content */}
+        <div className="relative z-10 text-center max-w-6xl mx-auto px-6 py-12">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+            transition={{ duration: 1.2 }}
           >
-            <Link
-              to="/contact"
-              className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-full font-semibold hover:from-indigo-600 hover:to-purple-700 transition-all duration-200 shadow-lg"
+            <motion.h1 
+              className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.2 }}
             >
-              Talk to Our Team for Custom Solutions
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Link>
+              Redefining Customer Interactions
+              <br />
+              <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                with Enterprise Voice AI
+              </span>
+            </motion.h1>
+            
+            <motion.p 
+              className="text-xl md:text-2xl text-blue-100 mb-4 max-w-4xl mx-auto"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.4 }}
+            >
+              Empower your support and sales teams with autonomous, intelligent agents that talk, learn, and close.
+            </motion.p>
+            
+            <motion.p 
+              className="text-lg text-blue-200 mb-12 max-w-3xl mx-auto"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.6 }}
+            >
+              Transform your customer experience with AI agents that understand context, emotion, and intent.
+            </motion.p>
+            
+            <motion.div 
+              className="flex flex-col sm:flex-row gap-6 justify-center items-center"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.8 }}
+            >
+              <motion.button
+                whileHover={{ scale: 1.05, boxShadow: "0 25px 50px -12px rgba(59, 130, 246, 0.25)" }}
+                whileTap={{ scale: 0.95 }}
+                className="inline-flex items-center px-10 py-5 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full font-bold text-lg shadow-2xl hover:shadow-3xl transition-all duration-300"
+              >
+                <PlayCircle className="mr-3 w-6 h-6" />
+                Try Live Demo
+              </motion.button>
+              
+              <motion.button
+                whileHover={{ scale: 1.05, backgroundColor: "rgba(255, 255, 255, 0.1)" }}
+                whileTap={{ scale: 0.95 }}
+                className="inline-flex items-center px-10 py-5 border-2 border-white text-white rounded-full font-bold text-lg hover:bg-white hover:text-gray-900 transition-all duration-300"
+              >
+                <Calendar className="mr-3 w-6 h-6" />
+                Book a Consultation
+              </motion.button>
+            </motion.div>
           </motion.div>
         </div>
       </section>
 
-      {/* Solutions Section */}
-      <section className="py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl font-bold text-white mb-6">
-              Enterprise AI Solutions
-            </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Comprehensive AI agent solutions designed for modern businesses
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {solutions.map((solution, index) => (
-              <motion.div
-                key={solution.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-              >
-                <GlassCard className="h-full">
-                  <div className="flex items-start space-x-4 mb-4">
-                    <div className="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center">
-                      <solution.icon className="w-6 h-6 text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-xl font-semibold text-white mb-2">{solution.title}</h3>
-                      <p className="text-gray-300 mb-4">{solution.description}</p>
-                    </div>
-                  </div>
-                  <ul className="space-y-2">
-                    {solution.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-center text-sm text-gray-300">
-                        <CheckCircle className="w-4 h-4 mr-2 text-green-400" />
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                </GlassCard>
-              </motion.div>
-            ))}
+      {/* Stats Section */}
+      <section className="py-20 px-6 bg-gradient-to-r from-blue-800 to-purple-800">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
+            <StatCard value="99.5%" label="Uptime Guarantee" delay={0} />
+            <StatCard value="2.3x" label="Faster Resolution" delay={0.1} />
+            <StatCard value="40+" label="Languages Supported" delay={0.2} />
+            <StatCard value="24/7" label="Customer Support" delay={0.3} />
           </div>
         </div>
       </section>
 
-      {/* Industries Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-indigo-900/20 to-purple-900/20">
+      {/* Features Section */}
+      <section className="py-20 px-6">
         <div className="max-w-7xl mx-auto">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-white mb-6">
-              Industry Solutions
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              Enterprise-Grade AI Capabilities
             </h2>
-            <p className="text-xl text-gray-300">
-              Tailored AI agents for specific industry needs and challenges
+            <p className="text-xl text-blue-100 max-w-3xl mx-auto">
+              Powerful features designed to scale with your business and exceed customer expectations.
             </p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {industries.map((industry, index) => (
-              <motion.div
-                key={industry.name}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-              >
-                <GlassCard className="h-full">
-                  <div className="text-center mb-4">
-                    <div className="text-4xl mb-2">{industry.icon}</div>
-                    <h3 className="text-xl font-semibold text-white mb-2">{industry.name}</h3>
-                    <p className="text-gray-300 text-sm">{industry.description}</p>
-                  </div>
-                  <div className="border-t border-white/20 pt-4">
-                    <h4 className="text-sm font-semibold text-white mb-2">Common Use Cases:</h4>
-                    <ul className="space-y-1">
-                      {industry.useCases.map((useCase, idx) => (
-                        <li key={idx} className="text-sm text-gray-300 flex items-center">
-                          <span className="w-2 h-2 bg-indigo-500 rounded-full mr-2"></span>
-                          {useCase}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </GlassCard>
-              </motion.div>
+            {features.map((feature, index) => (
+              <FeatureCard
+                key={index}
+                icon={feature.icon}
+                title={feature.title}
+                description={feature.description}
+                delay={index * 0.1}
+              />
             ))}
           </div>
         </div>
       </section>
 
-      {/* Voice Demo Section */}
-      <section className="py-20 px-4">
-        <div className="max-w-4xl mx-auto">
+      {/* Use Cases Section */}
+      <section className="py-20 px-6 bg-gradient-to-r from-slate-800 to-blue-800">
+        <div className="max-w-6xl mx-auto">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-center mb-12"
+            className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-white mb-6">
-              Experience Enterprise AI
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              Proven Results Across Industries
             </h2>
-            <p className="text-xl text-gray-300">
-              Listen to how our AI agents handle real business scenarios
+            <p className="text-xl text-blue-100 max-w-3xl mx-auto">
+              From customer support to sales automation, our AI agents deliver measurable impact.
             </p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <VoicePlayer
-              title="Customer Support Agent"
-              description="Hear how our AI handles complex customer inquiries"
-              audioSrc="/sounds/success.mp3"
-            />
-            <VoicePlayer
-              title="Sales Assistant"
-              description="Experience AI-powered sales support and product recommendations"
-              audioSrc="/sounds/hit.mp3"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Benefits Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-blue-900/20 to-indigo-900/20">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl font-bold text-white mb-6">
-              Business Impact
-            </h2>
-            <p className="text-xl text-gray-300">
-              Measurable results that drive business growth and efficiency
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {benefits.map((benefit, index) => (
-              <motion.div
-                key={benefit.metric}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-              >
-                <GlassCard className="text-center h-full">
-                  <div className="text-4xl font-bold text-white mb-2 neon-text">
-                    {benefit.metric}
-                  </div>
-                  <h3 className="text-lg font-semibold text-white mb-3">{benefit.label}</h3>
-                  <p className="text-gray-300 text-sm">{benefit.description}</p>
-                </GlassCard>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Security & Compliance */}
-      <section className="py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <motion.div
-              initial={{ opacity: 0, x: -30 }}
+              initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <h2 className="text-4xl font-bold text-white mb-6">
-                Enterprise-Grade Security
-              </h2>
-              <p className="text-xl text-gray-300 mb-8">
-                Built with security and compliance at the core for enterprise deployments
-              </p>
-              <ul className="space-y-4">
-                {[
-                  'SOC 2 Type II certified infrastructure',
-                  'GDPR and HIPAA compliance options',
-                  'End-to-end encryption for all communications',
-                  'Role-based access controls',
-                  'Audit logs and monitoring',
-                  'On-premise deployment options'
-                ].map((feature, index) => (
-                  <li key={index} className="flex items-center text-gray-300">
-                    <Shield className="w-6 h-6 mr-3 text-green-400" />
-                    {feature}
+              <GlassCard className="p-8 h-full">
+                <div className="flex items-center mb-6">
+                  <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-blue-500 rounded-full flex items-center justify-center mr-4">
+                    <Headphones className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white">Customer Support</h3>
+                </div>
+                <ul className="space-y-3 text-blue-100">
+                  <li className="flex items-center">
+                    <CheckCircle className="w-5 h-5 text-green-400 mr-3" />
+                    Resolve 80% of queries without human intervention
                   </li>
-                ))}
-              </ul>
+                  <li className="flex items-center">
+                    <CheckCircle className="w-5 h-5 text-green-400 mr-3" />
+                    Reduce average response time by 60%
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="w-5 h-5 text-green-400 mr-3" />
+                    Maintain consistent service quality 24/7
+                  </li>
+                </ul>
+              </GlassCard>
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: 30 }}
+              initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <div className="grid grid-cols-2 gap-4">
-                {[
-                  { icon: Shield, title: 'Security First', desc: 'Enterprise-grade security protocols' },
-                  { icon: Clock, title: '99.9% Uptime', desc: 'Reliable and always available' },
-                  { icon: Users, title: 'Scalable', desc: 'From hundreds to millions of users' },
-                  { icon: TrendingUp, title: 'Analytics', desc: 'Deep insights and reporting' }
-                ].map((item, index) => (
-                  <GlassCard key={index} className="text-center">
-                    <item.icon className="w-8 h-8 text-indigo-400 mx-auto mb-2" />
-                    <h3 className="text-white font-semibold mb-1">{item.title}</h3>
-                    <p className="text-gray-300 text-sm">{item.desc}</p>
-                  </GlassCard>
-                ))}
-              </div>
+              <GlassCard className="p-8 h-full">
+                <div className="flex items-center mb-6">
+                  <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mr-4">
+                    <TrendingUp className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white">Sales Automation</h3>
+                </div>
+                <ul className="space-y-3 text-blue-100">
+                  <li className="flex items-center">
+                    <CheckCircle className="w-5 h-5 text-green-400 mr-3" />
+                    Qualify leads automatically with intelligent screening
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="w-5 h-5 text-green-400 mr-3" />
+                    Schedule meetings and follow-ups seamlessly
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="w-5 h-5 text-green-400 mr-3" />
+                    Increase conversion rates by 35% on average
+                  </li>
+                </ul>
+              </GlassCard>
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="py-20 px-4 bg-gradient-to-r from-purple-900/20 to-pink-900/20">
-        <div className="max-w-7xl mx-auto">
+      {/* Final CTA */}
+      <section className="py-24 px-6 bg-gradient-to-r from-blue-600 to-purple-600">
+        <div className="max-w-5xl mx-auto text-center">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl font-bold text-white mb-6">
-              What Our Clients Say
-            </h2>
-            <p className="text-xl text-gray-300">
-              Enterprise leaders trust our AI agents to transform their operations
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <motion.div
-                key={testimonial.company}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.2 }}
-              >
-                <GlassCard className="h-full">
-                  <div className="flex items-center mb-4">
-                    <div className="text-2xl mr-3">{testimonial.logo}</div>
-                    <div>
-                      <h3 className="text-white font-semibold">{testimonial.company}</h3>
-                      <p className="text-gray-400 text-sm">{testimonial.industry}</p>
-                    </div>
-                  </div>
-                  <p className="text-gray-300 mb-6 italic">"{testimonial.quote}"</p>
-                  <div className="border-t border-white/20 pt-4">
-                    <p className="text-white font-semibold">{testimonial.name}</p>
-                    <p className="text-gray-400 text-sm">{testimonial.role}</p>
-                  </div>
-                </GlassCard>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Implementation Process */}
-      <section className="py-20 px-4">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl font-bold text-white mb-6">
-              Implementation Process
-            </h2>
-            <p className="text-xl text-gray-300">
-              From consultation to deployment in 4-6 weeks
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {[
-              {
-                step: 1,
-                title: 'Discovery',
-                description: 'Understand your business needs and use cases',
-                duration: '1 week'
-              },
-              {
-                step: 2,
-                title: 'Design',
-                description: 'Create custom AI agents for your specific requirements',
-                duration: '2 weeks'
-              },
-              {
-                step: 3,
-                title: 'Integration',
-                description: 'Connect with your existing systems and workflows',
-                duration: '1-2 weeks'
-              },
-              {
-                step: 4,
-                title: 'Launch',
-                description: 'Deploy and train your team on the new AI agents',
-                duration: '1 week'
-              }
-            ].map((step, index) => (
-              <motion.div
-                key={step.step}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-              >
-                <GlassCard className="text-center h-full">
-                  <div className="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-white font-bold">{step.step}</span>
-                  </div>
-                  <h3 className="text-xl font-semibold text-white mb-2">{step.title}</h3>
-                  <p className="text-gray-300 mb-3">{step.description}</p>
-                  <span className="text-sm text-indigo-300">{step.duration}</span>
-                </GlassCard>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h2 className="text-4xl font-bold text-white mb-6">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-8 leading-tight">
               Ready to Transform Your Business?
             </h2>
-            <p className="text-xl text-gray-300 mb-8">
-              Join hundreds of enterprises already using our AI agents to enhance customer experience
+            <p className="text-xl md:text-2xl text-blue-100 mb-12 max-w-3xl mx-auto leading-relaxed">
+              Join thousands of companies already using AI agents to revolutionize their customer experience.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                to="/contact"
-                className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-full font-semibold hover:from-indigo-600 hover:to-purple-700 transition-all duration-200 shadow-lg"
+            
+            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+              <motion.button
+                whileHover={{ scale: 1.05, boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)" }}
+                whileTap={{ scale: 0.95 }}
+                className="inline-flex items-center px-10 py-5 bg-white text-gray-800 rounded-full font-bold text-lg shadow-2xl hover:shadow-3xl transition-all duration-300"
               >
-                Get Custom Quote
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Link>
-              <Link
-                to="/contact"
-                className="inline-flex items-center px-8 py-4 bg-transparent border-2 border-white text-white rounded-full font-semibold hover:bg-white hover:text-gray-900 transition-all duration-200"
+                <PlayCircle className="mr-3 w-6 h-6" />
+                Start Your Free Trial
+              </motion.button>
+              
+              <motion.button
+                whileHover={{ scale: 1.05, backgroundColor: "rgba(255, 255, 255, 0.1)" }}
+                whileTap={{ scale: 0.95 }}
+                className="inline-flex items-center px-10 py-5 border-2 border-white text-white rounded-full font-bold text-lg hover:bg-white hover:text-gray-800 transition-all duration-300"
               >
-                Schedule Consultation
-              </Link>
+                <ArrowRight className="mr-3 w-6 h-6" />
+                Schedule Demo
+              </motion.button>
             </div>
           </motion.div>
         </div>
       </section>
     </div>
   );
-};
-
-export default Enterprise;
+}
