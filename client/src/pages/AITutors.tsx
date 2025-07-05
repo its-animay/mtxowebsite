@@ -27,54 +27,69 @@ import ChatBot from '../components/ui/ChatBot';
 // 3D AI Orb Component for Hero Section
 const AIOrb = ({ intensity = 1 }: { intensity?: number }) => {
   return (
-    <Float speed={2} rotationIntensity={0.5} floatIntensity={0.8}>
+    <Float speed={1.5} rotationIntensity={0.3} floatIntensity={0.6}>
       <group>
         {/* Main AI Orb */}
-        <Sphere args={[2, 64, 64]} position={[0, 0, 0]}>
+        <Sphere args={[1.8, 64, 64]} position={[0, 0, 0]}>
           <meshStandardMaterial 
             color="#4f46e5" 
             transparent 
-            opacity={0.7}
+            opacity={0.8}
             emissive="#3b82f6"
-            emissiveIntensity={intensity * 0.3}
-            roughness={0.1}
-            metalness={0.9}
+            emissiveIntensity={intensity * 0.4}
+            roughness={0.2}
+            metalness={0.8}
+          />
+        </Sphere>
+        
+        {/* Inner Core */}
+        <Sphere args={[1.2, 32, 32]} position={[0, 0, 0]}>
+          <meshStandardMaterial 
+            color="#8b5cf6" 
+            transparent 
+            opacity={0.3}
+            emissive="#8b5cf6"
+            emissiveIntensity={intensity * 0.5}
           />
         </Sphere>
         
         {/* Outer Ring */}
-        <group rotation={[0, 0, Math.PI / 4]}>
-          <Sphere args={[2.5, 32, 32]} position={[0, 0, 0]}>
+        <group rotation={[0, 0, Math.PI / 6]}>
+          <Sphere args={[2.3, 32, 32]} position={[0, 0, 0]}>
             <meshStandardMaterial 
               color="#06b6d4" 
               transparent 
-              opacity={0.2}
+              opacity={0.15}
               wireframe
             />
           </Sphere>
         </group>
         
-        {/* Floating Books */}
-        {[...Array(8)].map((_, i) => (
-          <Float key={i} speed={1 + i * 0.2} rotationIntensity={0.3}>
+        {/* Floating Books - Reduced count */}
+        {[...Array(6)].map((_, i) => (
+          <Float key={i} speed={0.8 + i * 0.15} rotationIntensity={0.2}>
             <Box 
-              args={[0.3, 0.4, 0.1]} 
+              args={[0.25, 0.35, 0.08]} 
               position={[
-                Math.sin(i * Math.PI / 4) * 4,
-                Math.cos(i * Math.PI / 4) * 2,
-                Math.sin(i * Math.PI / 3) * 3
+                Math.sin(i * Math.PI / 3) * 3.5,
+                Math.cos(i * Math.PI / 3) * 1.5,
+                Math.sin(i * Math.PI / 4) * 2
               ]}
             >
-              <meshStandardMaterial color="#f59e0b" />
+              <meshStandardMaterial 
+                color={i % 2 === 0 ? "#f59e0b" : "#10b981"} 
+                roughness={0.4}
+                metalness={0.1}
+              />
             </Box>
           </Float>
         ))}
         
         {/* School Text */}
         <Text
-          position={[0, -3.5, 0]}
-          fontSize={0.8}
-          color="#1f2937"
+          position={[0, -3.2, 0]}
+          fontSize={0.7}
+          color="#374151"
           anchorX="center"
           anchorY="middle"
         >
@@ -97,17 +112,17 @@ const AnimatedStep = ({ step, title, description, icon: Icon, delay = 0 }: {
     initial={{ opacity: 0, y: 50 }}
     whileInView={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.6, delay }}
-    className="relative"
+    className="relative h-full"
   >
-    <GlassCard className="p-8 text-center hover:scale-105 transition-transform duration-300">
-      <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
-        <Icon className="w-8 h-8 text-white" />
+    <GlassCard className="p-6 text-center hover:scale-105 transition-transform duration-300 h-full flex flex-col">
+      <div className="w-14 h-14 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+        <Icon className="w-7 h-7 text-white" />
       </div>
-      <div className="w-10 h-10 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-xl">
+      <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-full flex items-center justify-center mx-auto mb-4 text-white font-bold text-lg">
         {step}
       </div>
-      <h3 className="text-xl font-bold text-gray-800 mb-4">{title}</h3>
-      <p className="text-gray-600 leading-relaxed">{description}</p>
+      <h3 className="text-lg font-bold text-gray-800 mb-3 min-h-[3rem] flex items-center justify-center">{title}</h3>
+      <p className="text-gray-600 text-sm leading-relaxed flex-grow">{description}</p>
     </GlassCard>
   </motion.div>
 );
@@ -254,47 +269,47 @@ export default function AITutors() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
       {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
         {/* Background 3D Scene */}
         <div className="absolute inset-0 z-0">
-          <Canvas camera={{ position: [0, 0, 10], fov: 50 }}>
-            <ambientLight intensity={0.3} />
-            <directionalLight position={[10, 10, 5]} intensity={1} />
+          <Canvas camera={{ position: [0, 0, 12], fov: 45 }}>
+            <ambientLight intensity={0.4} />
+            <directionalLight position={[10, 10, 5]} intensity={1.2} />
             <AIOrb intensity={1} />
-            <OrbitControls enableZoom={false} enablePan={false} />
+            <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.5} />
             <Environment preset="city" />
           </Canvas>
         </div>
 
         {/* Hero Content */}
-        <div className="relative z-10 text-center max-w-5xl mx-auto px-6">
+        <div className="relative z-10 text-center max-w-6xl mx-auto px-6 py-12">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.2 }}
           >
-            <h1 className="text-6xl md:text-7xl font-bold text-gray-900 mb-6 leading-tight">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight">
               <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 AI Tutors
               </span>
               <br />
               Built for Your Students
             </h1>
-            <p className="text-xl md:text-2xl text-gray-700 mb-4 max-w-3xl mx-auto">
+            <p className="text-xl md:text-2xl text-gray-700 mb-4 max-w-4xl mx-auto">
               Train your own voice assistant with your content, style, and voice.
             </p>
-            <p className="text-lg text-gray-600 mb-12 max-w-2xl mx-auto">
+            <p className="text-lg text-gray-600 mb-12 max-w-3xl mx-auto">
               Empower your classrooms with 24/7 personalized, voice-based AI tutors that know your syllabus.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full font-semibold text-lg shadow-2xl hover:shadow-3xl transition-all duration-300"
               >
                 <Upload className="mr-3 w-6 h-6" />
-                📥 Upload Your Curriculum
+                Upload Your Curriculum
               </motion.button>
               
               <motion.button
@@ -304,7 +319,7 @@ export default function AITutors() {
                 className="inline-flex items-center px-8 py-4 bg-white text-gray-800 rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl border-2 border-gray-200 hover:border-blue-300 transition-all duration-300"
               >
                 <Mic className="mr-3 w-6 h-6" />
-                🎤 Talk to Your First AI Tutor
+                Talk to Your First AI Tutor
               </motion.button>
             </div>
           </motion.div>
@@ -328,7 +343,7 @@ export default function AITutors() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-4">
             {steps.map((step, index) => (
               <AnimatedStep
                 key={index}
@@ -376,7 +391,7 @@ export default function AITutors() {
 
       {/* Student Experience Simulation */}
       <section className="py-20 px-6">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -391,21 +406,22 @@ export default function AITutors() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
             {/* Voice Demo */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
+              className="h-full"
             >
-              <GlassCard className="p-8">
+              <GlassCard className="p-8 h-full">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-2xl font-bold text-gray-800">Voice Interaction</h3>
                   <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={() => setActiveDemo('voice')}
-                    className={`p-3 rounded-full ${activeDemo === 'voice' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600'}`}
+                    className={`p-3 rounded-full transition-colors duration-300 ${activeDemo === 'voice' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'}`}
                   >
                     <Volume2 className="w-5 h-5" />
                   </motion.button>
@@ -423,15 +439,16 @@ export default function AITutors() {
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
+              className="h-full"
             >
-              <GlassCard className="p-8">
+              <GlassCard className="p-8 h-full">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-2xl font-bold text-gray-800">Chat Interaction</h3>
                   <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={() => setActiveDemo('chat')}
-                    className={`p-3 rounded-full ${activeDemo === 'chat' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600'}`}
+                    className={`p-3 rounded-full transition-colors duration-300 ${activeDemo === 'chat' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'}`}
                   >
                     <MessageCircle className="w-5 h-5" />
                   </motion.button>
@@ -475,7 +492,7 @@ export default function AITutors() {
 
       {/* Dashboard Preview */}
       <section className="py-20 px-6">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -495,23 +512,41 @@ export default function AITutors() {
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
           >
-            <GlassCard className="p-8">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="text-center">
-                  <TrendingUp className="w-12 h-12 text-blue-600 mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-gray-800 mb-2">Usage Analytics</h3>
-                  <p className="text-gray-600">Track student engagement and learning hours</p>
-                </div>
-                <div className="text-center">
-                  <Target className="w-12 h-12 text-green-600 mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-gray-800 mb-2">Most-Asked Topics</h3>
-                  <p className="text-gray-600">Identify areas where students need more help</p>
-                </div>
-                <div className="text-center">
-                  <BarChart3 className="w-12 h-12 text-purple-600 mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-gray-800 mb-2">Progress Heatmap</h3>
-                  <p className="text-gray-600">Visualize student performance across subjects</p>
-                </div>
+            <GlassCard className="p-8 lg:p-12">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <motion.div 
+                  className="text-center"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <TrendingUp className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-800 mb-3">Usage Analytics</h3>
+                  <p className="text-gray-600 leading-relaxed">Track student engagement and learning hours</p>
+                </motion.div>
+                <motion.div 
+                  className="text-center"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Target className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-800 mb-3">Most-Asked Topics</h3>
+                  <p className="text-gray-600 leading-relaxed">Identify areas where students need more help</p>
+                </motion.div>
+                <motion.div 
+                  className="text-center"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <BarChart3 className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-800 mb-3">Progress Heatmap</h3>
+                  <p className="text-gray-600 leading-relaxed">Visualize student performance across subjects</p>
+                </motion.div>
               </div>
             </GlassCard>
           </motion.div>
@@ -519,37 +554,37 @@ export default function AITutors() {
       </section>
 
       {/* Call to Action */}
-      <section className="py-20 px-6 bg-gradient-to-r from-blue-600 to-purple-600">
-        <div className="max-w-4xl mx-auto text-center">
+      <section className="py-24 px-6 bg-gradient-to-r from-blue-600 to-purple-600">
+        <div className="max-w-5xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-8 leading-tight">
               The Future of Teaching Is Here
             </h2>
-            <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+            <p className="text-xl md:text-2xl text-blue-100 mb-12 max-w-3xl mx-auto leading-relaxed">
               You Lead, AI Supports. Transform your school's learning experience today.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
               <motion.button
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.05, boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)" }}
                 whileTap={{ scale: 0.95 }}
-                className="inline-flex items-center px-8 py-4 bg-white text-gray-800 rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl transition-all duration-300"
+                className="inline-flex items-center px-10 py-5 bg-white text-gray-800 rounded-full font-bold text-lg shadow-2xl hover:shadow-3xl transition-all duration-300"
               >
                 <Rocket className="mr-3 w-6 h-6" />
-                🚀 Launch AI Tutor Demo
+                Launch AI Tutor Demo
               </motion.button>
               
               <motion.button
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.05, backgroundColor: "rgba(255, 255, 255, 0.1)" }}
                 whileTap={{ scale: 0.95 }}
-                className="inline-flex items-center px-8 py-4 border-2 border-white text-white rounded-full font-semibold text-lg hover:bg-white hover:text-gray-800 transition-all duration-300"
+                className="inline-flex items-center px-10 py-5 border-2 border-white text-white rounded-full font-bold text-lg hover:bg-white hover:text-gray-800 transition-all duration-300"
               >
                 <PhoneCall className="mr-3 w-6 h-6" />
-                📞 Book a Discovery Call
+                Book a Discovery Call
               </motion.button>
             </div>
           </motion.div>
