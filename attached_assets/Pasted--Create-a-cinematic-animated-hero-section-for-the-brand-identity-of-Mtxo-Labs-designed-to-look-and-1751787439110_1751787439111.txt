@@ -1,0 +1,70 @@
+"Create a cinematic, animated hero section for the brand identity of Mtxo Labs, designed to look and feel like a tech origin story title screen. Each part of the animation should be intentional, timed, and elegant, blending motion, glow, and futuristic minimalism.
+
+💥 Animation Flow:
+1. Sequential Character Reveal: M → T → X → O
+Each letter fades or zooms into place one-by-one (0.4s each with 0.1s stagger)
+
+Use motion blur, scale bounce, and light flare swipe per letter
+
+Light sweep or shimmer as each letter lands
+
+2. 'labs' Slide-in Subtitle
+After O, delay 0.8s ➝ slide in labs from the right or bottom
+
+Use soft blur to sharp reveal transition with a glowing white or aurora-blue neon outline
+
+Add low-opacity backdrop behind labs to contrast it over a vibrant background
+
+3. Tagline: Beyond Imagination
+Appears under Mtxo Labs, centered, with a delay of 1.4s
+
+Animate with:
+
+Letter-spacing expansion → normal
+
+Glow-up background (aurora pulse or radial gradient flare growing behind text)
+
+Smooth upward fade with glow bloom around text
+
+🎨 Styling & Visual Aesthetics:
+Font: Space Grotesk or Geist for futuristic clarity
+
+Main Title: 96–128px, bold, pure white with gradient or glow
+
+'labs': 28–36px, medium weight, translucent neon white with flicker-in feel
+
+Tagline: 20–28px, italic or spaced, glow + blur in soft purple/blue hues
+
+🌌 Background Animation:
+Keep current floating crystal/gem 3D environment
+
+Add:
+
+Slowly rotating geometric shapes in z-depth
+
+Light particle trails moving outward from center
+
+Aurora fog sweep in the background using radial shaders or layered Lottie/Canvas elements
+
+🎛️ Technical Specs:
+Tech: React + Tailwind + Framer Motion (or Webflow/Lottie if no code)
+
+Easing: spring or easeOutExpo for dramatic entrance
+
+Mobile fallback: Static Mtxo Labs + glowing background with subtle pulse loop
+
+Performance: GPU optimized, use lazy loading for non-critical layers
+
+✨ Bonus Interactions:
+Hover on Mtxo = shimmer or pulse glow
+
+Scroll-triggered particle halo expands subtly as user moves down
+
+CTA buttons below tagline can animate into frame later (Explore, Enter, etc.)
+
+🧠 Brand Tone:
+Majestic, Mystical, yet Enterprise-grade
+
+Feels like the birth of an AI-powered legend
+
+Designed to awe + convert

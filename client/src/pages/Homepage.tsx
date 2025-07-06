@@ -8,6 +8,7 @@ import AnimatedBrain from '../components/3d/AnimatedBrain';
 import FloatingCubes from '../components/3d/FloatingCubes';
 import ParticleSystem from '../components/3d/ParticleSystem';
 import CrystallineCore from '../components/3d/CrystallineCore';
+import CinematicHero from '../components/3d/CinematicHero';
 import GlassCard from '../components/ui/GlassCard';
 import VoicePlayer from '../components/ui/VoicePlayer';
 import ChatBot from '../components/ui/ChatBot';
@@ -53,49 +54,17 @@ const Homepage = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
-        {/* 3D Background */}
-        <div className="absolute inset-0 z-0">
-          <Canvas>
-            <PerspectiveCamera makeDefault position={[0, 0, 10]} />
-            <ambientLight intensity={0.5} />
-            <directionalLight position={[10, 10, 5]} intensity={1} />
-            <Suspense fallback={null}>
-              <CrystallineCore scale={1.5} intensity={1.2} showText={false} />
-              <FloatingCubes count={15} spread={20} />
-              <ParticleSystem count={3000} radius={30} />
-            </Suspense>
-            <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.5} />
-            <Environment preset="night" />
-          </Canvas>
-        </div>
-
-        {/* Hero Content */}
-        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-5xl md:text-7xl font-bold text-white mb-6 neon-text"
-          >
-            mtxo labs
-          </motion.h1>
-          
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-xl md:text-2xl text-gray-300 mb-8"
-          >
-            AI-Powered Learning & Enterprise Solutions
-          </motion.p>
-          
+      {/* Cinematic Hero Section */}
+      <CinematicHero />
+      
+      {/* CTA Section */}
+      <section className="relative py-20 bg-gradient-to-b from-black via-slate-900 to-black">
+        <div className="max-w-4xl mx-auto text-center px-4">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center"
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="flex flex-col sm:flex-row gap-6 justify-center"
           >
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Link
@@ -118,22 +87,6 @@ const Homepage = () => {
             </motion.div>
           </motion.div>
         </div>
-
-        {/* Scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1, duration: 0.5 }}
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-        >
-          <div className="w-6 h-10 border-2 border-white rounded-full flex justify-center">
-            <motion.div
-              animate={{ y: [0, 12, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-              className="w-1 h-3 bg-white rounded-full mt-2"
-            />
-          </div>
-        </motion.div>
       </section>
 
       {/* Features Section */}
