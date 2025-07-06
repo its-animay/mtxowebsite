@@ -3,6 +3,7 @@ import { motion, useAnimation, useMotionValue, useTransform } from 'framer-motio
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, Environment, Float, Stars } from '@react-three/drei';
 import * as THREE from 'three';
+import { soundEffects } from '../../lib/soundEffects';
 
 // Enhanced 3D geometric background with depth layering
 function EnhancedGeometry({ mouseX, mouseY }: { mouseX: any, mouseY: any }) {
@@ -189,21 +190,23 @@ function EnhancedParticleField() {
     }
     
     // Faster z-axis movement for grid particles
-    if (gridFieldRef.current) {
+    if (gridFieldRef.current && gridFieldRef.current.geometry && gridFieldRef.current.geometry.attributes.position) {
       const positions = gridFieldRef.current.geometry.attributes.position.array as Float32Array;
       
-      for (let i = 0; i < gridCount; i++) {
-        positions[i * 3 + 2] += 0.05;
-        
-        // Reset particles that moved too far forward
-        if (positions[i * 3 + 2] > 30) {
-          positions[i * 3 + 2] = -30;
-          positions[i * 3] = (Math.random() - 0.5) * 30;
-          positions[i * 3 + 1] = (Math.random() - 0.5) * 30;
+      if (positions) {
+        for (let i = 0; i < gridCount; i++) {
+          positions[i * 3 + 2] += 0.05;
+          
+          // Reset particles that moved too far forward
+          if (positions[i * 3 + 2] > 30) {
+            positions[i * 3 + 2] = -30;
+            positions[i * 3] = (Math.random() - 0.5) * 30;
+            positions[i * 3 + 1] = (Math.random() - 0.5) * 30;
+          }
         }
+        
+        gridFieldRef.current.geometry.attributes.position.needsUpdate = true;
       }
-      
-      gridFieldRef.current.geometry.attributes.position.needsUpdate = true;
       gridFieldRef.current.rotation.y = state.clock.elapsedTime * 0.1;
     }
   });
@@ -269,6 +272,7 @@ interface CinematicHeroProps {
 
 export default function CinematicHero({ onAnimationComplete }: CinematicHeroProps) {
   const [animationStarted, setAnimationStarted] = useState(false);
+  const [isSoundMuted, setIsSoundMuted] = useState(false);
   const mControls = useAnimation();
   const tControls = useAnimation();
   const xControls = useAnimation();
@@ -294,6 +298,12 @@ export default function CinematicHero({ onAnimationComplete }: CinematicHeroProp
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, [mouseX, mouseY]);
 
+  const toggleSound = () => {
+    const newMutedState = !isSoundMuted;
+    setIsSoundMuted(newMutedState);
+    soundEffects.setMuted(newMutedState);
+  };
+
   useEffect(() => {
     const runAnimation = async () => {
       if (animationStarted) return;
@@ -311,6 +321,7 @@ export default function CinematicHero({ onAnimationComplete }: CinematicHeroProp
       });
 
       // Sequential letter reveals - M
+      soundEffects.playLetterReveal(0); // M
       await mControls.start({
         opacity: [0, 1],
         scale: [0.3, 1.1, 1],
@@ -324,6 +335,7 @@ export default function CinematicHero({ onAnimationComplete }: CinematicHeroProp
       await new Promise(resolve => setTimeout(resolve, 100));
 
       // T
+      soundEffects.playLetterReveal(1); // T
       await tControls.start({
         opacity: [0, 1],
         scale: [0.3, 1.1, 1],
@@ -337,6 +349,7 @@ export default function CinematicHero({ onAnimationComplete }: CinematicHeroProp
       await new Promise(resolve => setTimeout(resolve, 100));
 
       // X
+      soundEffects.playLetterReveal(2); // X
       await xControls.start({
         opacity: [0, 1],
         scale: [0.3, 1.1, 1],
@@ -350,6 +363,7 @@ export default function CinematicHero({ onAnimationComplete }: CinematicHeroProp
       await new Promise(resolve => setTimeout(resolve, 100));
 
       // O
+      soundEffects.playLetterReveal(3); // O
       await oControls.start({
         opacity: [0, 1],
         scale: [0.3, 1.1, 1],
@@ -363,6 +377,7 @@ export default function CinematicHero({ onAnimationComplete }: CinematicHeroProp
       await new Promise(resolve => setTimeout(resolve, 800));
 
       // Labs slide in
+      soundEffects.playLabsReveal();
       await labsControls.start({
         opacity: [0, 1],
         x: [50, 0],
@@ -376,6 +391,7 @@ export default function CinematicHero({ onAnimationComplete }: CinematicHeroProp
       await new Promise(resolve => setTimeout(resolve, 1400));
 
       // Tagline appear
+      soundEffects.playTaglineReveal();
       await taglineControls.start({
         opacity: [0, 1],
         y: [20, 0],
@@ -385,6 +401,11 @@ export default function CinematicHero({ onAnimationComplete }: CinematicHeroProp
           ease: "easeOut"
         }
       });
+
+      // Start ambient drone after all animations
+      setTimeout(() => {
+        soundEffects.playAmbientDrone();
+      }, 2000);
 
       if (onAnimationComplete) {
         onAnimationComplete();
@@ -401,6 +422,25 @@ export default function CinematicHero({ onAnimationComplete }: CinematicHeroProp
 
   return (
     <div className="relative h-screen w-full overflow-hidden bg-black">
+      {/* Sound Control Button */}
+      <motion.button
+        onClick={toggleSound}
+        className="absolute top-6 right-6 z-30 p-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full hover:bg-white/20 transition-all duration-200"
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        title={isSoundMuted ? "Enable Sound" : "Disable Sound"}
+      >
+        {isSoundMuted ? (
+          <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.617.778L4.086 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.086l4.297-3.778zm4.717 5.428L16.514 10l-2.414 1.496a1 1 0 11-.894-1.788L14.268 9l-1.062-.708a1 1 0 11.894-1.788z" clipRule="evenodd" />
+            <path d="M15.657 5.757a1 1 0 011.414 0 8 8 0 010 11.314 1 1 0 11-1.414-1.414 6 6 0 000-8.485 1 1 0 010-1.415z" />
+          </svg>
+        ) : (
+          <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.617.778L4.086 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.086l4.297-3.778zm7.425 0a1 1 0 011.414 1.414L16.828 6l1.394 1.414a1 1 0 01-1.414 1.414L15.414 7.414l-1.394 1.414a1 1 0 11-1.414-1.414L14 6l-1.394-1.414a1 1 0 011.414-1.414L15.414 4.586l1.394-1.51z" clipRule="evenodd" />
+          </svg>
+        )}
+      </motion.button>
       {/* 3D Background */}
       <div className="absolute inset-0 z-0">
         <Canvas camera={{ position: [0, 0, 10], fov: 60 }}>
@@ -461,6 +501,7 @@ export default function CinematicHero({ onAnimationComplete }: CinematicHeroProp
               textShadow: "0 0 30px rgba(255, 255, 255, 0.8), 0 0 60px rgba(0, 255, 255, 0.6)",
               filter: "drop-shadow(0 0 20px rgba(255, 255, 255, 1))"
             }}
+            onHoverStart={() => soundEffects.playHover()}
             className="text-6xl md:text-8xl lg:text-9xl font-bold text-white select-none cursor-pointer"
             style={{
               fontFamily: "'Space Grotesk', monospace",
@@ -480,6 +521,7 @@ export default function CinematicHero({ onAnimationComplete }: CinematicHeroProp
               textShadow: "0 0 30px rgba(255, 255, 255, 0.8), 0 0 60px rgba(0, 255, 255, 0.6)",
               filter: "drop-shadow(0 0 20px rgba(255, 255, 255, 1))"
             }}
+            onHoverStart={() => soundEffects.playHover()}
             className="text-6xl md:text-8xl lg:text-9xl font-bold text-white select-none cursor-pointer"
             style={{
               fontFamily: "'Space Grotesk', monospace",
@@ -499,6 +541,7 @@ export default function CinematicHero({ onAnimationComplete }: CinematicHeroProp
               textShadow: "0 0 30px rgba(255, 255, 255, 0.8), 0 0 60px rgba(0, 255, 255, 0.6)",
               filter: "drop-shadow(0 0 20px rgba(255, 255, 255, 1))"
             }}
+            onHoverStart={() => soundEffects.playHover()}
             className="text-6xl md:text-8xl lg:text-9xl font-bold text-white select-none cursor-pointer"
             style={{
               fontFamily: "'Space Grotesk', monospace",
@@ -518,6 +561,7 @@ export default function CinematicHero({ onAnimationComplete }: CinematicHeroProp
               textShadow: "0 0 30px rgba(255, 255, 255, 0.8), 0 0 60px rgba(0, 255, 255, 0.6)",
               filter: "drop-shadow(0 0 20px rgba(255, 255, 255, 1))"
             }}
+            onHoverStart={() => soundEffects.playHover()}
             className="text-6xl md:text-8xl lg:text-9xl font-bold text-white select-none cursor-pointer"
             style={{
               fontFamily: "'Space Grotesk', monospace",
@@ -536,6 +580,7 @@ export default function CinematicHero({ onAnimationComplete }: CinematicHeroProp
               textShadow: "0 0 25px rgba(255, 255, 255, 0.8), 0 0 50px rgba(0, 255, 255, 0.6)",
               filter: "drop-shadow(0 0 15px rgba(255, 255, 255, 0.8))"
             }}
+            onHoverStart={() => soundEffects.playHover()}
             className="text-3xl md:text-4xl lg:text-5xl font-medium text-white/90 select-none cursor-pointer"
             style={{
               fontFamily: "'Space Grotesk', monospace",
@@ -559,6 +604,7 @@ export default function CinematicHero({ onAnimationComplete }: CinematicHeroProp
               textShadow: "0 0 20px rgba(255, 255, 255, 0.6), 0 0 40px rgba(147, 51, 234, 0.8)",
               filter: "drop-shadow(0 0 15px rgba(255, 255, 255, 0.8))"
             }}
+            onHoverStart={() => soundEffects.playHover()}
             animate={{
               textShadow: [
                 "0 0 10px rgba(255, 255, 255, 0.3), 0 0 20px rgba(147, 51, 234, 0.4)",
