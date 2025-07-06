@@ -13,11 +13,11 @@ const Footer = () => {
           <div className="space-y-4">
             <Link to="/" className="flex items-center space-x-2">
               <Brain className="h-8 w-8 text-blue-400" />
-              <span className="text-xl font-bold text-white">AI Learning</span>
+              <span className="text-xl font-bold text-white">mtxo labs</span>
             </Link>
             <p className="text-gray-300 text-sm">
-              Revolutionizing education with AI-powered learning platforms, 
-              voice agents, and intelligent tutoring systems.
+              Revolutionizing education and enterprise with AI-powered learning platforms, 
+              voice agents, and intelligent automation solutions.
             </p>
             <div className="flex space-x-4">
               <Twitter className="h-5 w-5 text-gray-400 hover:text-white cursor-pointer transition-colors" />
@@ -55,7 +55,7 @@ const Footer = () => {
           <div>
             <h3 className="text-white font-semibold mb-4">Contact</h3>
             <div className="space-y-2 text-sm text-gray-300">
-              <p>hello@ailearning.com</p>
+              <p>hello@mtxolabs.com</p>
               <p>+1 (555) 123-4567</p>
               <p>123 Innovation Drive<br />San Francisco, CA 94105</p>
             </div>
@@ -63,7 +63,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-white/20 mt-8 pt-8 text-center text-gray-400 text-sm">
-          <p>&copy; {currentYear} AI Learning Platform. All rights reserved.</p>
+          <p>&copy; {currentYear} mtxo labs. All rights reserved.</p>
         </div>
       </div>
     </footer>

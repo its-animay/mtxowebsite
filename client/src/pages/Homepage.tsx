@@ -79,7 +79,7 @@ const Homepage = () => {
             transition={{ duration: 0.8 }}
             className="text-5xl md:text-7xl font-bold text-white mb-6 neon-text"
           >
-            AI-Powered Learning
+            mtxo labs
           </motion.h1>
           
           <motion.p
@@ -88,7 +88,7 @@ const Homepage = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-xl md:text-2xl text-gray-300 mb-8"
           >
-            Voice Agents. Intelligent Tutors. Adaptive Learning.
+            AI-Powered Learning & Enterprise Solutions
           </motion.p>
           
           <motion.div

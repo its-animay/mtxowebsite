@@ -48,7 +48,7 @@ const Header = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <Brain className="h-8 w-8 text-blue-400" />
-            <span className="text-xl font-bold text-white">AI Learning</span>
+            <span className="text-xl font-bold text-white">mtxo labs</span>
           </Link>
 
           {/* Desktop Navigation */}
